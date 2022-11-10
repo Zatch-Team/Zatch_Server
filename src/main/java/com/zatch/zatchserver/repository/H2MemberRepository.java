@@ -1,6 +1,7 @@
 package com.zatch.zatchserver.repository;
 
-import com.zatch.zatchserver.dto.GetMemberResponseDto;
+import com.zatch.zatchserver.domain.Member;
+import com.zatch.zatchserver.dto.GetMemberResDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class H2MemberRepository implements MemberRepository{
+public class H2MemberRepository implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -19,23 +20,41 @@ public class H2MemberRepository implements MemberRepository{
     }
 
     @Override
-    public GetMemberResponseDto getMemberById(Long memberId) {
-        String getMemberByIdQuery = "select * from member where member_id = ?";
+    public Member selectOne(Long memberId) {
+        String selectOneQuery = "select * from member where member_id = ?";
 
-        return this.jdbcTemplate.queryForObject(getMemberByIdQuery,
-                (rs, rowNum) -> new GetMemberResponseDto(
-                        rs.getLong("member_id"),
-                        rs.getString("member_name")),
+        return this.jdbcTemplate.queryForObject(selectOneQuery,
+                (rs, rowNum) -> Member.loadMember(
+                        rs.getString("member_name"),
+                        rs.getString("nickname"),
+                        rs.getString("email")),
                 memberId);
     }
 
     @Override
-    public List<GetMemberResponseDto> getAllMembers() {
-        String getAllMembersQuery = "select * from member";
+    public List<Member> selectAll() {
+        String selectAllQuery = "select * from member";
 
-        return this.jdbcTemplate.query(getAllMembersQuery,
-                (rs, rowNum) -> new GetMemberResponseDto(
-                        rs.getLong("member_id"),
-                        rs.getString("member_name")));
+        return this.jdbcTemplate.query(selectAllQuery,
+                (rs, rowNum) -> Member.loadMember(
+                        rs.getString("member_name"),
+                        rs.getString("nickname"),
+                        rs.getString("email")));
+    }
+
+    @Override
+    public void insertOne(Member newMember) {
+        String insertOneQuery = "insert into member (member_name, nickname, email, password) values (?,?,?,?);";
+
+        this.jdbcTemplate.update(insertOneQuery, new Object[] {newMember.getName(), newMember.getNickname(),
+                newMember.getEmail(), newMember.getPassword()});
+    }
+
+    @Override
+    public Long updateNickname(Long memberId, String newNickname) {
+        String updateNicknameQuery = "update member set nickname = ? where member.member_id = ?";
+        this.jdbcTemplate.update(updateNicknameQuery, new Object[]{newNickname, memberId});
+
+        return memberId;
     }
 }
