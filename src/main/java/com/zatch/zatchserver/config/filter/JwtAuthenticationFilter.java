@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Slf4j
-@Component
+//@Component
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
