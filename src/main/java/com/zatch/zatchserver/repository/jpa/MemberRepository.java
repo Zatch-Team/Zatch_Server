@@ -1,13 +1,12 @@
-package com.zatch.zatchserver.repository;
+package com.zatch.zatchserver.repository.jpa;
 
-import com.zatch.zatchserver.domain.Member;
-import com.zatch.zatchserver.dto.GetMemberResDto;
+import com.zatch.zatchserver.domain.jpa.Member;
 
 import java.util.List;
 
 public interface MemberRepository {
 
-    Member selectOne(Long memberId);
+    Member selectOneById(Long memberId);
     List<Member> selectAll();
 
     void insertOne(Member newMember);

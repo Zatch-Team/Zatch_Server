@@ -1,7 +1,6 @@
-package com.zatch.zatchserver.service;
+package com.zatch.zatchserver.service.jpa;
 
-import com.zatch.zatchserver.domain.Member;
-import com.zatch.zatchserver.dto.GetMemberResDto;
+import com.zatch.zatchserver.domain.jpa.Member;
 
 import java.util.List;
 

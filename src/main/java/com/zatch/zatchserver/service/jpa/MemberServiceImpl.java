@@ -1,7 +1,7 @@
-package com.zatch.zatchserver.service;
+package com.zatch.zatchserver.service.jpa;
 
-import com.zatch.zatchserver.domain.Member;
-import com.zatch.zatchserver.repository.MemberRepository;
+import com.zatch.zatchserver.domain.jpa.Member;
+import com.zatch.zatchserver.repository.jpa.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member findOne(Long memberId) {
-        return memberRepository.selectOne(memberId);
+        return memberRepository.selectOneById(memberId);
     }
 
     @Override
