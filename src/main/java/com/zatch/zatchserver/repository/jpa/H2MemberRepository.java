@@ -1,7 +1,6 @@
-package com.zatch.zatchserver.repository;
+package com.zatch.zatchserver.repository.jpa;
 
-import com.zatch.zatchserver.domain.Member;
-import com.zatch.zatchserver.dto.GetMemberResDto;
+import com.zatch.zatchserver.domain.jpa.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +19,7 @@ public class H2MemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member selectOne(Long memberId) {
+    public Member selectOneById(Long memberId) {
         String selectOneQuery = "select * from member where member_id = ?";
 
         return this.jdbcTemplate.queryForObject(selectOneQuery,

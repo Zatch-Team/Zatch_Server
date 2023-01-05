@@ -1,4 +1,4 @@
-package com.zatch.zatchserver.domain;
+package com.zatch.zatchserver.domain.jpa;
 
 import lombok.Getter;
 

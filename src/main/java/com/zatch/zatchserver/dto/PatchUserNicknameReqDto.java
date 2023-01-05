@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PatchMemberNicknameReqDto {
+public class PatchUserNicknameReqDto {
     String newNickname;
 }

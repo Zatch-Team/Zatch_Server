@@ -1,9 +1,9 @@
 package com.zatch.zatchserver.controller;
 
-import com.zatch.zatchserver.domain.Member;
+import com.zatch.zatchserver.domain.jpa.Member;
 import com.zatch.zatchserver.dto.*;
-import com.zatch.zatchserver.repository.MemberRepository;
-import com.zatch.zatchserver.service.MemberService;
+import com.zatch.zatchserver.repository.jpa.MemberRepository;
+import com.zatch.zatchserver.service.jpa.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +20,20 @@ public class MemberController {
 
     @GetMapping("/{memberId}")
     @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
-    public GetMemberResDto getMember(@PathVariable("memberId") Long memberId) {
+    public GetUserResDto getMember(@PathVariable("memberId") Long memberId) {
         Member findMember = memberService.findOne(memberId);
 
-        return new GetMemberResDto(findMember.getName(), findMember.getNickname(), findMember.getEmail());
+        return new GetUserResDto(findMember.getName(), findMember.getNickname(), findMember.getEmail());
     }
 
     @GetMapping("")
     @ApiOperation(value = "전체 회원 조회", notes = "전체 회원 조회 API")
-    public List<GetMemberResDto> getAllMembers() {
+    public List<GetUserResDto> getAllMembers() {
         List<Member> findMembers = memberService.findAll();
 
-        List<GetMemberResDto> getMemberResDtos = new ArrayList<>();
+        List<GetUserResDto> getMemberResDtos = new ArrayList<>();
         for (Member findMember : findMembers) {
-            getMemberResDtos.add(new GetMemberResDto(findMember.getName(), findMember.getNickname(),
+            getMemberResDtos.add(new GetUserResDto(findMember.getName(), findMember.getNickname(),
                     findMember.getEmail()));
         }
 
@@ -42,7 +42,7 @@ public class MemberController {
 
     @PostMapping("/new")
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
-    public PostMemberResDto postMember(@RequestBody PostMemberReqDto postMemberReqDto) {
+    public PostUserResDto postMember(@RequestBody PostUserReqDto postMemberReqDto) {
         Member newMember = Member.createMember(
                 postMemberReqDto.getName(),
                 postMemberReqDto.getNickname(),
@@ -52,17 +52,17 @@ public class MemberController {
 
         memberService.save(newMember);
 
-        return new PostMemberResDto(newMember.getName(), newMember.getEmail());
+        return new PostUserResDto(newMember.getName(), newMember.getEmail());
     }
 
     @PatchMapping("/{memberId}/nickname")
     @ApiOperation(value = "회원 닉네임 수정", notes = "회원 닉네임 수정 API")
-    public PatchMemberNicknameResDto patchNickname(@PathVariable("memberId") Long memberId,
-                                                   @RequestBody PatchMemberNicknameReqDto pathMemberNicknameReqDto) {
+    public PatchUserNicknameResDto patchNickname(@PathVariable("memberId") Long memberId,
+                                                 @RequestBody PatchUserNicknameReqDto pathMemberNicknameReqDto) {
         String newNickname = pathMemberNicknameReqDto.getNewNickname();
         Long idOfModifiedMember = memberService.modifyNickname(memberId, newNickname);
 
         Member modifiedMember = memberService.findOne(idOfModifiedMember);
-        return new PatchMemberNicknameResDto(modifiedMember.getName(), modifiedMember.getNickname(), modifiedMember.getEmail());
+        return new PatchUserNicknameResDto(modifiedMember.getNickname());
     }
 }
