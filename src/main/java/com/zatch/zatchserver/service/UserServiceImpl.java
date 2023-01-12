@@ -1,5 +1,6 @@
 package com.zatch.zatchserver.service;
 
+import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
         return null;
+    }
+
+    @Override
+    public Long authenticate(PostLoginReq postLoginReq) {
+        String email = postLoginReq.getEmail();
+        String password = postLoginReq.getPassword();
+
+        return 1L;
     }
 }

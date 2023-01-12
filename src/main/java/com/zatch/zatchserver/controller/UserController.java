@@ -1,5 +1,6 @@
 package com.zatch.zatchserver.controller;
 
+import com.zatch.zatchserver.config.SessionManager;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.dto.*;
 import com.zatch.zatchserver.repository.UserRepository;
@@ -8,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +18,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserRepository userRepository;
+    private final SessionManager sessionManager;
     private final UserService userService;
 
+    @PostMapping("/login")
+    public void login(@RequestBody PostLoginReq postLoginReq, HttpServletResponse response) {
+        Long userId = userService.authenticate(postLoginReq);
+        sessionManager.createSession(userId, response);
+    }
     @GetMapping("/{userId}")
     @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
-    public GetUserResDto getUser(@PathVariable("UserId") Long userId) {
+    public GetUserResDto getUser(@PathVariable("userId") Long userId) {
         User findUser = userService.getOneById(userId);
 
         return new GetUserResDto(findUser.getName(), findUser.getNickname(), findUser.getEmail());
