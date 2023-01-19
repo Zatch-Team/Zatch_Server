@@ -5,6 +5,8 @@ spring:
     username: root
     password: zatchServer777!
 
+  jwt:
+    secret: zatch_server_jwt_secret_key_1234567890
   # swagger 적용 시 path문제 해결을 위한 설정
   mvc:
     pathmatch:

@@ -4,6 +4,7 @@ import com.zatch.zatchserver.config.SessionManager;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.dto.*;
 import com.zatch.zatchserver.repository.UserRepository;
+import com.zatch.zatchserver.service.AuthService;
 import com.zatch.zatchserver.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final SessionManager sessionManager;
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public void login(@RequestBody PostLoginReq postLoginReq, HttpServletResponse response) {
         Long userId = userService.authenticate(postLoginReq);
-        sessionManager.createSession(userId, response);
+        String accessToken = authService.issueAccessToken(userId);
+        response.addHeader("ACCESS_TOKEN", accessToken);
     }
     @GetMapping("/{userId}")
     @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
