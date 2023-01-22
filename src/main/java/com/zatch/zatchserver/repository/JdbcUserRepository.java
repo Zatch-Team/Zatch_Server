@@ -31,7 +31,7 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public Long insert(User user) {
-        String sql = "INSERT INTO USER(name, nickname, email, password) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO user(name, nickname, email, password) VALUES(?, ?, ?, ?)";
         Object[] params = {user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
         jdbcTemplate.update(sql, params);
         System.out.println("회원가입 sql insert");
