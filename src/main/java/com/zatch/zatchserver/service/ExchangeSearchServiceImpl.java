@@ -9,7 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ExchangeSearchServicelmpl {
+public class ExchangeSearchServiceImpl implements ExchangeSearchService{
 
     private final ExchangeSearchRepository searchRepository;
 
