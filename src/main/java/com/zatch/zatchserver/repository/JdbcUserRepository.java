@@ -21,7 +21,7 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public User selectOneById(Long memberId) {
-        return user.get(memberId);
+        return null;
     }
 
     @Override
@@ -39,8 +39,11 @@ public class JdbcUserRepository implements UserRepository{
     }
 
     @Override
-    public Long modifyNickname(Long userId) {
-        User modUserId = selectOneById(userId);
-        return modUserId.getId();
+    public Long modifyNickname(Long userId, String newNickname) {
+        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
+        Object[] params = {newNickname, userId};
+        jdbcTemplate.update(sql, params);
+        System.out.println("닉네임변경 sql update");
+        return userId;
     }
 }

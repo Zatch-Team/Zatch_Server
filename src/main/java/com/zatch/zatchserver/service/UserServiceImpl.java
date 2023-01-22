@@ -30,6 +30,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
-        return userRepository.modifyNickname(userId);
+        return userRepository.modifyNickname(userId, newNickname);
     }
 }

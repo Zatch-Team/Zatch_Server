@@ -11,5 +11,5 @@ public interface UserRepository {
 
     Long insert(User user);
 
-    Long modifyNickname(Long userId);
+    Long modifyNickname(Long userId, String newNickname);
 }
