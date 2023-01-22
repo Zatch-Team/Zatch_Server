@@ -10,4 +10,6 @@ public interface UserRepository {
     List<User> selectAll();
 
     Long insert(User user);
+
+    Long modifyNickname(Long userId);
 }
