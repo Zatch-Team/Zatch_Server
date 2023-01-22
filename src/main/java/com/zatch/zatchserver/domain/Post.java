@@ -1,11 +1,17 @@
 package com.zatch.zatchserver.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 import java.math.BigInteger;
 import java.util.Date;
 
+@Builder
 @Getter
+@AllArgsConstructor
+@Data
 public class Post {
 
 
@@ -23,11 +29,11 @@ public class Post {
     private Integer like_count;
 
     /*---Constructor---*/
-    public Post(Long user_id, Long category_id, BigInteger is_free, String item_name, String content, Integer quantity, Date date_buy, Date date_expire,
-                Integer is_opened, Integer any_zatch) {
+    public Post(Long user_id, Long category_id, int is_free, String item_name, String content, int quantity, java.sql.Date date_buy, java.sql.Date date_expire,
+                int is_opened, int any_zatch) {
         this.user_id = user_id;
         this.category_id = category_id;
-        this.is_free = is_free;
+        this.is_free = BigInteger.valueOf(is_free);
         this.item_name = item_name;
         this.content = content;
         this.quantity = quantity;
@@ -36,7 +42,8 @@ public class Post {
         this.is_opened = is_opened;
         this.any_zatch=any_zatch;
 
-
-
     }
+
+
+
 }

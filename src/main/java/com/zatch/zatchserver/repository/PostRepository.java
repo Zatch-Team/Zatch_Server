@@ -2,14 +2,13 @@ package com.zatch.zatchserver.repository;
 
 
 import com.zatch.zatchserver.domain.Post;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface PostRepository {
 
-    List<Post> findAllByOrderByCreatedAtDesc();
+    static int save(Post.PostBuilder post);
 
-
+    static Optional<Post> findById(int postId);
 }
 
 
