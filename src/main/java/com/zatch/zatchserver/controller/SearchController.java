@@ -8,17 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-
+@RequestMapping("/search")
 public class SearchController {
 
-    private final SearchRepository searchRepository;
+    //private final SearchRepository searchRepository;
     private final SearchService searchService;
 
-    @GetMapping("/search")
-    @ApiOperation(value = "keyword", notes = "아이템 이름으로 재치 조회 API")
-    public GetSearchResDto searchKeyword(@RequestBody GetSearchResDto getSearchResDto) {
-        String keyword= getSearchResDto.getKeyword();
-
+    @GetMapping("/{keyword}")
+    @ApiOperation(value = "아이템 이름", notes = "아이템 이름으로 재치 조회 API")
+    public GetSearchResDto searchKeyword(@PathVariable("keyword") String keyword) {
+        //String keyword= getSearchResDto.getKeyword();
         searchService.findByItemName(keyword);
         return new GetSearchResDto(keyword);
     }

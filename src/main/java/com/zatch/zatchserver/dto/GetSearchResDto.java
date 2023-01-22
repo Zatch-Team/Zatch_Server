@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 public class GetSearchResDto {
     private String keyword;
 
-    public String getKeyword() {
-        return keyword;
-    }
+//    public String getKeyword() {
+//        return keyword;
+//    }
 }
