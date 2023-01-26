@@ -1,4 +1,4 @@
-package com.zatch.zatchserver.dto;
+package com.zatch.zatchserver.dto.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

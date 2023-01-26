@@ -1,6 +1,7 @@
 package com.zatch.zatchserver.service;
 
-import com.zatch.zatchserver.dto.PostLoginReq;
+import com.zatch.zatchserver.dto.UserInfo;
+import com.zatch.zatchserver.dto.controller.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getOneById(Long userId) {
-        return null;
+    public UserInfo getOneById(Long userId) {
+        return userRepository.selectOneById(userId);
     }
 
     @Override
@@ -35,10 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long authenticate(PostLoginReq postLoginReq) {
-        String email = postLoginReq.getEmail();
-        String password = postLoginReq.getPassword();
-
-        return 1L;
+    public Long authenticate(String email, String password) {
+        return userRepository.authenticateBy(email, password);
     }
 }

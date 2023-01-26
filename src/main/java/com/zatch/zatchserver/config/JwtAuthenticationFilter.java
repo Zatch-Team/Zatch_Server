@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 예외
         }
         String accessToken = getJwt(request);
-
+        log.info("accessToken : " + accessToken);
         // accessToken이 유효하지 않을 경우
         if (!jwtProvider.validate(accessToken)) {
             //예외
@@ -39,14 +39,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         addUserIdToRequest(jwtProvider.parse(accessToken), request);
         filterChain.doFilter(request, response);
-
-
     }
 
     public boolean needToCheckJwt(HttpServletRequest request) {
         String requestUrl = request.getRequestURI();
         log.info(requestUrl);
-        if (requestUrl.startsWith("/users/new") || requestUrl.startsWith("/users/login")) {
+        if (requestUrl.startsWith("/users/signup") || requestUrl.startsWith("/users/signin")) {
             return false;
         }
 
@@ -59,7 +57,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // HttpServletRequest 객체에 복호화된 userId를 attribute로 등록
     private void addUserIdToRequest(Long userId, HttpServletRequest request) {
-        request.setAttribute("userID", userId);
+        request.setAttribute("userId", userId);
     }
 
 

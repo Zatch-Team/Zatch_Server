@@ -1,4 +1,4 @@
-package com.zatch.zatchserver.dto;
+package com.zatch.zatchserver.dto.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUserReqDto {
+public class PostUserReq {
     String name;
     String nickname;
     String email;

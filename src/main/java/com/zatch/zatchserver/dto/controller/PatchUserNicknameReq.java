@@ -1,10 +1,10 @@
-package com.zatch.zatchserver.dto;
+package com.zatch.zatchserver.dto.controller;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PatchUserNicknameReqDto {
+public class PatchUserNicknameReq {
     String newNickname;
 }
