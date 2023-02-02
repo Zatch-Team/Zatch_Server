@@ -12,4 +12,6 @@ public interface UserService {
     List<User> getAll();
 
     Long modifyNickname(Long userId, String newNickname);
+
+    String profile(Long userId);
 }

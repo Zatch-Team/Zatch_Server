@@ -34,7 +34,7 @@ public class JdbcUserRepository implements UserRepository{
         String sql = "INSERT INTO user(name, nickname, email, password) VALUES(?, ?, ?, ?)";
         Object[] params = {user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
         jdbcTemplate.update(sql, params);
-        System.out.println("회원가입 sql insert");
+        System.out.println("Signup sql insert");
         return user.getId();
     }
 
@@ -43,7 +43,15 @@ public class JdbcUserRepository implements UserRepository{
         String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
         Object[] params = {newNickname, userId};
         jdbcTemplate.update(sql, params);
-        System.out.println("닉네임변경 sql update");
+        System.out.println("Modify nickname sql update");
         return userId;
+    }
+
+    @Override
+    public List<Map<String, Object>> profile(Long userId) {
+        String sql = "SELECT nickname from user WHERE user_id = ?";
+        Object[] params = {userId};
+        System.out.println("User's profile SQL select");
+        return jdbcTemplate.queryForList(sql, params);
     }
 }

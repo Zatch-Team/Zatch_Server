@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
     public Long modifyNickname(Long userId, String newNickname) {
         return userRepository.modifyNickname(userId, newNickname);
     }
+
+    @Override
+    public String profile(Long userId) {
+        return String.valueOf(userRepository.profile(userId));
+    }
 }
