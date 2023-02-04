@@ -1,5 +1,6 @@
 package com.zatch.zatchserver.service;
 
+import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface UserService {
     List<User> getAll();
 
     Long modifyNickname(Long userId, String newNickname);
+
+    Long authenticate(PostLoginReq postLoginReq);
 }
