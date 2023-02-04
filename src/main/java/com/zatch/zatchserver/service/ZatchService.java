@@ -18,6 +18,6 @@ public class ZatchService {
     }
 
     public Long register(Zatch newZatch) {
-        return null;
+        return zatchRepository.register();
     }
 }

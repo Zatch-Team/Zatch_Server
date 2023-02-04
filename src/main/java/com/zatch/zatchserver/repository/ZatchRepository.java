@@ -9,6 +9,9 @@ public interface ZatchRepository {
 
     List<Zatch> findAllByOrderByCreatedAtDesc();
 
+    Long register();
+
+
 }
 
 
