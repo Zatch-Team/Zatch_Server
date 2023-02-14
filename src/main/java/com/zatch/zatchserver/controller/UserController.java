@@ -69,10 +69,15 @@ public class UserController {
     @GetMapping("/{userId}/profile")
     @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
     public GetProfileResDTO getProfile(@PathVariable("userId") Long userId) {
-        User findUser = userService.getOneById(userId);
-        System.out.println("@@@@@@@@@id@@@@@@@@@ : "+ userId);
-
         String userNickname = userService.profile(userId);
         return new GetProfileResDTO(userNickname);
+    }
+
+    @RequestMapping("/{userId}/town")
+    @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
+    public PostUserTownReqDto postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
+        String town = postUserTownReqDTO.getTown();
+        String userTown = userService.town(userId, town);
+        return new PostUserTownReqDto(userTown);
     }
 }

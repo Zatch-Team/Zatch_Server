@@ -10,6 +10,7 @@ public class User {
     private String email;
     private String password;
     private String profileImgUrl;
+    private String town;
 
     /*---Constructor---*/
     public User(String name, String nickname, String email, String password) {
@@ -22,5 +23,8 @@ public class User {
     /*---Setter---*/
     public void changeProfileImg(String profileImgUrl) {
         this.profileImgUrl = profileImgUrl;
+    }
+    public void setTown(String town) {
+        this.town = town;
     }
 }

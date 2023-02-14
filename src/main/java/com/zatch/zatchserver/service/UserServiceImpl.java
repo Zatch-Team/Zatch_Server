@@ -37,4 +37,9 @@ public class UserServiceImpl implements UserService {
     public String profile(Long userId) {
         return String.valueOf(userRepository.profile(userId));
     }
+
+    @Override
+    public String town(Long userId, String town) {
+        return userRepository.townInsert(userId, town);
+    }
 }

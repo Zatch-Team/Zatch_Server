@@ -14,4 +14,6 @@ public interface UserService {
     Long modifyNickname(Long userId, String newNickname);
 
     String profile(Long userId);
+
+    String town(Long userId, String town);
 }
