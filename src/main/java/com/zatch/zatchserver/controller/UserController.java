@@ -73,7 +73,7 @@ public class UserController {
         return new GetProfileResDTO(userNickname);
     }
 
-    @RequestMapping("/{userId}/town")
+    @PostMapping("/{userId}/town")
     @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
     public PostUserTownReqDto postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
         String town = postUserTownReqDTO.getTown();
