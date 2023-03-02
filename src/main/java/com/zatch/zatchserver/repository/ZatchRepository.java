@@ -50,4 +50,13 @@ public class ZatchRepository {
         String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
         return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
     }
+
+    public Integer decreaseLike(Long userId, Long zatchId) {
+        String decreaseLikeQuery = "delete from zatch_like where user_id = ? and zatch_id = ?";
+
+        jdbcTemplate.update(decreaseLikeQuery, new Object[] {userId, zatchId});
+
+        String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
+        return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
+    }
 }

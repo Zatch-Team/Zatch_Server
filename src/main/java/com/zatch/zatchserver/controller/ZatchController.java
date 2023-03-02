@@ -41,4 +41,13 @@ public class ZatchController {
 
         return new PostZatchLikeRes(zatchId, likeCount);
     }
+
+    @DeleteMapping("/{zatchId}/dislikes")
+    public PostZatchLikeRes postZatchDislike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        Integer likeCount = zatchService.makeZatchDisLike(userId, zatchId);
+        return new PostZatchLikeRes(zatchId, likeCount);
+
+    }
 }

@@ -34,4 +34,9 @@ public class ZatchService {
     public Integer makeZatchLike(Long userId, Long zatchId) {
         return zatchRepository.increaseLike(userId, zatchId);
     }
+
+    @Transactional
+    public Integer makeZatchDisLike(Long userId, Long zatchId) {
+        return zatchRepository.decreaseLike(userId, zatchId);
+    }
 }

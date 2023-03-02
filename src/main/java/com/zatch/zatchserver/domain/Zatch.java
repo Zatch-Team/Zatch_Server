@@ -22,7 +22,7 @@ public class Zatch {
 
     /*---Constructor---*/
     @Builder
-    public Zatch(Long userId, Long categoryId, Boolean isFree, String itemName, String content, Integer quantity, Date purchaseDate, Date expirationDate, Boolean isOpened, Boolean allowAnyZatch) {
+    public Zatch(Long userId, Long categoryId, Boolean isFree, String itemName, String content, Integer quantity, Date purchaseDate, Date expirationDate, Boolean isOpened, Boolean allowAnyZatch, Integer likeCount) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.isFree = isFree;
@@ -33,5 +33,6 @@ public class Zatch {
         this.expirationDate = expirationDate;
         this.isOpened = isOpened;
         this.allowAnyZatch = allowAnyZatch;
+        this.likeCount= likeCount;
     }
 }
