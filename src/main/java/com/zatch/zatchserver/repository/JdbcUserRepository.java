@@ -54,4 +54,27 @@ public class JdbcUserRepository implements UserRepository{
         System.out.println("User's profile SQL select");
         return jdbcTemplate.queryForList(sql, params);
     }
+
+    @Override
+    public String townInsert(Long userId, String town){
+        String town1 = jdbcTemplate.queryForObject("SELECT town1 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        String town2 = jdbcTemplate.queryForObject("SELECT town2 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        String town3 = jdbcTemplate.queryForObject("SELECT town3 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        if (town1 == null){
+            jdbcTemplate.update("UPDATE user SET town1 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town1 sql update");
+        }
+        else if (town2 == null){
+            jdbcTemplate.update("UPDATE user SET town2 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town2 sql update");
+        }
+        else if (town3 == null){
+            jdbcTemplate.update("UPDATE user SET town3 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town3 sql update");
+        }
+        else {
+            System.out.println("User's town over 3");
+        }
+        return town;
+    }
 }

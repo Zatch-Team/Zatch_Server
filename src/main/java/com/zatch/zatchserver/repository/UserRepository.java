@@ -15,4 +15,6 @@ public interface UserRepository {
     Long modifyNickname(Long userId, String newNickname);
 
     List<Map<String, Object>> profile(Long userId);
+
+    String townInsert(Long userId, String town);
 }
