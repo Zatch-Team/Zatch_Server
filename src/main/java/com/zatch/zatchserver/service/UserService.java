@@ -1,5 +1,6 @@
 package com.zatch.zatchserver.service;
 
+import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 
 import java.util.List;
