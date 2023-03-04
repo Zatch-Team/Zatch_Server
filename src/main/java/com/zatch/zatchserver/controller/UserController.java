@@ -22,12 +22,6 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
-    @PostMapping("/login")
-    public void login(@RequestBody PostLoginReq postLoginReq, HttpServletResponse response) {
-        Long userId = userService.authenticate(postLoginReq);
-        String accessToken = authService.issueAccessToken(userId);
-        response.addHeader("ACCESS_TOKEN", accessToken);
-    }
     @GetMapping("/{userId}")
     @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
     public GetUserResDto getUser(@PathVariable("userId") Long userId) {
