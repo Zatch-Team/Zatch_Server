@@ -14,5 +14,5 @@ public interface UserService {
 
     Long modifyNickname(Long userId, String newNickname);
 
-    Long authenticate(PostLoginReq postLoginReq);
+    String profile(Long userId);
 }

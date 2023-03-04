@@ -35,10 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Long authenticate(PostLoginReq postLoginReq) {
-        String email = postLoginReq.getEmail();
-        String password = postLoginReq.getPassword();
-
-        return 1L;
+    public String profile(Long userId) {
+        return String.valueOf(userRepository.profile(userId));
     }
 }
