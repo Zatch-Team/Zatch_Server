@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getOneById(Long userId) {
-        return null;
+        return userRepository.selectOneById(userId);
     }
 
     @Override
@@ -31,14 +31,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
-        return null;
+        return userRepository.modifyNickname(userId, newNickname);
     }
 
     @Override
-    public Long authenticate(PostLoginReq postLoginReq) {
-        String email = postLoginReq.getEmail();
-        String password = postLoginReq.getPassword();
+    public String profile(Long userId) {
+        return String.valueOf(userRepository.profile(userId));
+    }
 
-        return 1L;
+    @Override
+    public String town(Long userId, String town) {
+        return userRepository.townInsert(userId, town);
     }
 }

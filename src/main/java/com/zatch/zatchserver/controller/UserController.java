@@ -22,12 +22,6 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
-    @PostMapping("/login")
-    public void login(@RequestBody PostLoginReq postLoginReq, HttpServletResponse response) {
-        Long userId = userService.authenticate(postLoginReq);
-        String accessToken = authService.issueAccessToken(userId);
-        response.addHeader("ACCESS_TOKEN", accessToken);
-    }
     @GetMapping("/{userId}")
     @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
     public GetUserResDto getUser(@PathVariable("userId") Long userId) {
@@ -70,9 +64,24 @@ public class UserController {
     public PatchUserNicknameResDto patchNickname(@PathVariable("userId") Long userId
             , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
         String newNickname = pathUserNicknameReqDto.getNewNickname();
-        Long idOfModifiedUser = userService.modifyNickname(userId, newNickname);
+        Long idOfModifiedUser = userId;
 
-        User modifiedUser = userService.getOneById(idOfModifiedUser);
-        return new PatchUserNicknameResDto(modifiedUser.getNickname());
+        userService.modifyNickname(idOfModifiedUser, newNickname);
+        return new PatchUserNicknameResDto(newNickname);
+    }
+
+    @GetMapping("/{userId}/profile")
+    @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
+    public GetProfileResDTO getProfile(@PathVariable("userId") Long userId) {
+        String userNickname = userService.profile(userId);
+        return new GetProfileResDTO(userNickname);
+    }
+
+    @PostMapping("/{userId}/town")
+    @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
+    public PostUserTownReqDto postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
+        String town = postUserTownReqDTO.getTown();
+        String userTown = userService.town(userId, town);
+        return new PostUserTownReqDto(userTown);
     }
 }

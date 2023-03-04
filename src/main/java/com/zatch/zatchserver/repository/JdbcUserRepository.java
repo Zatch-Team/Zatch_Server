@@ -5,11 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcUserRepository implements UserRepository{
 
+    private static Map<Long, User> user = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcUserRepository(DataSource dataSource) {
@@ -28,16 +31,50 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public Long insert(User user) {
-        String userInsertQuery = "insert into user(name, nickname, email, password) values(?,?,?,?)";
-        Object[] userInsertQueryParams = new Object[]{user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
-        jdbcTemplate.update(userInsertQuery, userInsertQueryParams);
-
-        return getLastInsertId();
+        String sql = "INSERT INTO user(name, nickname, email, password) VALUES(?, ?, ?, ?)";
+        Object[] params = {user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
+        jdbcTemplate.update(sql, params);
+        System.out.println("Signup sql insert");
+        return user.getId();
     }
 
-    public Long getLastInsertId() {
-        String getLastInsertedIdQuery = "select last_insert_id()";
+    @Override
+    public Long modifyNickname(Long userId, String newNickname) {
+        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
+        Object[] params = {newNickname, userId};
+        jdbcTemplate.update(sql, params);
+        System.out.println("Modify nickname sql update");
+        return userId;
+    }
 
-        return jdbcTemplate.queryForObject(getLastInsertedIdQuery, Long.class);
+    @Override
+    public List<Map<String, Object>> profile(Long userId) {
+        String sql = "SELECT nickname from user WHERE user_id = ?";
+        Object[] params = {userId};
+        System.out.println("User's profile SQL select");
+        return jdbcTemplate.queryForList(sql, params);
+    }
+
+    @Override
+    public String townInsert(Long userId, String town){
+        String town1 = jdbcTemplate.queryForObject("SELECT town1 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        String town2 = jdbcTemplate.queryForObject("SELECT town2 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        String town3 = jdbcTemplate.queryForObject("SELECT town3 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+        if (town1 == null){
+            jdbcTemplate.update("UPDATE user SET town1 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town1 sql update");
+        }
+        else if (town2 == null){
+            jdbcTemplate.update("UPDATE user SET town2 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town2 sql update");
+        }
+        else if (town3 == null){
+            jdbcTemplate.update("UPDATE user SET town3 = ? WHERE user_id = ?", town, userId);
+            System.out.println("User's town3 sql update");
+        }
+        else {
+            System.out.println("User's town over 3");
+        }
+        return town;
     }
 }
