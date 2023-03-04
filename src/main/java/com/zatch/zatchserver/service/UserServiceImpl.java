@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getOneById(Long userId) {
-        return null;
+        return userRepository.selectOneById(userId);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
-        return null;
+        return userRepository.modifyNickname(userId, newNickname);
     }
 
     @Override

@@ -70,9 +70,9 @@ public class UserController {
     public PatchUserNicknameResDto patchNickname(@PathVariable("userId") Long userId
             , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
         String newNickname = pathUserNicknameReqDto.getNewNickname();
-        Long idOfModifiedUser = userService.modifyNickname(userId, newNickname);
+        Long idOfModifiedUser = userId;
 
-        User modifiedUser = userService.getOneById(idOfModifiedUser);
-        return new PatchUserNicknameResDto(modifiedUser.getNickname());
+        userService.modifyNickname(idOfModifiedUser, newNickname);
+        return new PatchUserNicknameResDto(newNickname);
     }
 }

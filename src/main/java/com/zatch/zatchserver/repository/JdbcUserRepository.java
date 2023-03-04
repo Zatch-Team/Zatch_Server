@@ -5,11 +5,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcUserRepository implements UserRepository{
 
+    private static Map<Long, User> user = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcUserRepository(DataSource dataSource) {
@@ -28,16 +31,19 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public Long insert(User user) {
-        String userInsertQuery = "insert into user(name, nickname, email, password) values(?,?,?,?)";
-        Object[] userInsertQueryParams = new Object[]{user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
-        jdbcTemplate.update(userInsertQuery, userInsertQueryParams);
-
-        return getLastInsertId();
+        String sql = "INSERT INTO user(name, nickname, email, password) VALUES(?, ?, ?, ?)";
+        Object[] params = {user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
+        jdbcTemplate.update(sql, params);
+        System.out.println("회원가입 sql insert");
+        return user.getId();
     }
 
-    public Long getLastInsertId() {
-        String getLastInsertedIdQuery = "select last_insert_id()";
-
-        return jdbcTemplate.queryForObject(getLastInsertedIdQuery, Long.class);
+    @Override
+    public Long modifyNickname(Long userId, String newNickname) {
+        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
+        Object[] params = {newNickname, userId};
+        jdbcTemplate.update(sql, params);
+        System.out.println("닉네임변경 sql update");
+        return userId;
     }
 }
