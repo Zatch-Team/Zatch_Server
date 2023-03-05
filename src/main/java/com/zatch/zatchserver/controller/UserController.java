@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -43,6 +45,14 @@ public class UserController {
     public GetUserReqDto getLogin(@PathVariable("email") String email) {
         userService.getUser(email);
         return new GetUserReqDto(email);
+    }
+
+    @GetMapping("/logout")
+    @ApiOperation(value="로그아웃", notes = "로그아웃 API")
+    public String logout(HttpServletRequest request) throws Exception{
+        HttpSession session = request.getSession();
+        session.invalidate();
+        return "logout";
     }
 
 
