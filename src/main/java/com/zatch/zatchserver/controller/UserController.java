@@ -1,17 +1,13 @@
 package com.zatch.zatchserver.controller;
 
-import com.zatch.zatchserver.config.SessionManager;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.dto.*;
-import com.zatch.zatchserver.repository.UserRepository;
 import com.zatch.zatchserver.service.AuthService;
 import com.zatch.zatchserver.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -20,28 +16,6 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
-
-    @GetMapping("/{userId}")
-    @ApiOperation(value = "회원 조회", notes = "회원 id로 회원 조회 API")
-    public GetUserResDto getUser(@PathVariable("userId") Long userId) {
-        User findUser = userService.getOneById(userId);
-
-        return new GetUserResDto(findUser.getName(), findUser.getNickname(), findUser.getEmail());
-    }
-
-    @GetMapping("/all")
-    @ApiOperation(value = "전체 회원 조회", notes = "전체 회원 조회 API")
-    public List<GetUserResDto> getAllUsers() {
-        List<User> findUsers = userService.getAll();
-
-        List<GetUserResDto> getUserResDtos = new ArrayList<>();
-        for (User findUser : findUsers) {
-            getUserResDtos.add(new GetUserResDto(findUser.getName(), findUser.getNickname(),
-                    findUser.getEmail()));
-        }
-
-        return getUserResDtos;
-    }
 
     @PostMapping("/new")
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
@@ -64,6 +38,14 @@ public class UserController {
         return new PostUserResDto(newUser.getName(), newUser.getEmail(), adjectives.get(0) + " " + animals.get(0));
     }
 
+    @GetMapping("/{email}/login")
+    @ApiOperation(value = "로그인", notes = "로그인 API")
+    public GetUserReqDto getLogin(@PathVariable("email") String email) {
+        userService.getUser(email);
+        return new GetUserReqDto(email);
+    }
+
+
     @PatchMapping("/{userId}/nickname")
     @ApiOperation(value = "회원 닉네임 수정", notes = "회원 닉네임 수정 API")
     public PatchUserNicknameResDto patchNickname(@PathVariable("userId") Long userId
@@ -77,9 +59,9 @@ public class UserController {
 
     @GetMapping("/{userId}/profile")
     @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
-    public GetProfileResDTO getProfile(@PathVariable("userId") Long userId) {
+    public GetProfileResDto getProfile(@PathVariable("userId") Long userId) {
         String userNickname = userService.profile(userId);
-        return new GetProfileResDTO(userNickname);
+        return new GetProfileResDto(userNickname);
     }
 
     @PostMapping("/{userId}/town")

@@ -20,13 +20,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getOneById(Long userId) {
-        return userRepository.selectOneById(userId);
-    }
-
-    @Override
-    public List<User> getAll() {
-        return null;
+    public String getUser(String email) {
+        return userRepository.getUser(email);
     }
 
     @Override

@@ -20,22 +20,20 @@ public class JdbcUserRepository implements UserRepository{
     }
 
     @Override
-    public User selectOneById(Long memberId) {
-        return null;
-    }
-
-    @Override
-    public List<User> selectAll() {
-        return null;
-    }
-
-    @Override
     public Long insert(User user) {
         String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
         Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
         jdbcTemplate.update(sql, params);
         System.out.println("Signup sql insert");
         return user.getId();
+    }
+
+    @Override
+    public String getUser(String email) {
+        String sql = "SELECT user_id from user WHERE email = ?";
+        Object[] params = {email};
+        System.out.println("User's Login Correct SQL select");
+        return jdbcTemplate.queryForObject(sql, params, String.class);
     }
 
     @Override

@@ -8,9 +8,7 @@ import java.util.List;
 public interface UserService {
     Long join(User user);
 
-    User getOneById(Long userId);
-
-    List<User> getAll();
+    String getUser(String email);
 
     Long modifyNickname(Long userId, String newNickname);
 
