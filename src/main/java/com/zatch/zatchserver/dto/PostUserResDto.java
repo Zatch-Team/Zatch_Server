@@ -8,4 +8,5 @@ import lombok.Getter;
 public class PostUserResDto {
     String name;
     String email;
+    String nickname;
 }
