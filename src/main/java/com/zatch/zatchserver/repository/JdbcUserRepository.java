@@ -28,6 +28,16 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public Long insert(User user) {
-        return null;
+        String userInsertQuery = "insert into user(name, nickname, email, password) values(?,?,?,?)";
+        Object[] userInsertQueryParams = new Object[]{user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
+        jdbcTemplate.update(userInsertQuery, userInsertQueryParams);
+
+        return getLastInsertId();
+    }
+
+    public Long getLastInsertId() {
+        String getLastInsertedIdQuery = "select last_insert_id()";
+
+        return jdbcTemplate.queryForObject(getLastInsertedIdQuery, Long.class);
     }
 }
