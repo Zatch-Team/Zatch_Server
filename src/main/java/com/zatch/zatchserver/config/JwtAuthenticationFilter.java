@@ -30,15 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 예외
         }
-        String accessToken = getJwt(request);
-
-        // accessToken이 유효하지 않을 경우
-        if (!jwtProvider.validate(accessToken)) {
-            //예외
-        }
-
-        addUserIdToRequest(jwtProvider.parse(accessToken), request);
-        filterChain.doFilter(request, response);
+//        String accessToken = getJwt(request);
+//
+//        // accessToken이 유효하지 않을 경우
+//        if (!jwtProvider.validate(accessToken)) {
+//            //예외
+//        }
+//
+//        addUserIdToRequest(jwtProvider.parse(accessToken), request);
+//        filterChain.doFilter(request, response);
 
 
     }

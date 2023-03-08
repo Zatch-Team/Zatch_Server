@@ -13,11 +13,10 @@ public class User {
     private String town;
 
     /*---Constructor---*/
-    public User(String name, String nickname, String email, String password) {
+    public User(String name, String email, String nickname) {
         this.name = name;
-        this.nickname = nickname;
         this.email = email;
-        this.password = password;
+        this.nickname = nickname;
     }
 
     /*---Setter---*/
