@@ -61,35 +61,50 @@ public class UserController {
 
     @GetMapping("/logout")
     @ApiOperation(value="로그아웃", notes = "로그아웃 API")
-    public String logout(HttpServletRequest request) throws Exception{
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "logout";
+    public ResponseEntity logout(HttpServletRequest request) throws Exception{
+        try {
+            HttpSession session = request.getSession();
+            session.invalidate();
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, "Success Logout"), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Logout"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PatchMapping("/{userId}/nickname")
     @ApiOperation(value = "회원 닉네임 수정", notes = "회원 닉네임 수정 API")
-    public PatchUserNicknameResDto patchNickname(@PathVariable("userId") Long userId
+    public ResponseEntity patchNickname(@PathVariable("userId") Long userId
             , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
-        String newNickname = pathUserNicknameReqDto.getNewNickname();
-        Long idOfModifiedUser = userId;
-
-        userService.modifyNickname(idOfModifiedUser, newNickname);
-        return new PatchUserNicknameResDto(newNickname);
+        try {
+            String newNickname = pathUserNicknameReqDto.getNewNickname();
+            Long idOfModifiedUser = userId;
+            userService.modifyNickname(idOfModifiedUser, newNickname);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new PatchUserNicknameResDto(newNickname)), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Modify Nickname"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/{userId}/profile")
     @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
-    public GetProfileResDto getProfile(@PathVariable("userId") Long userId) {
-        String userNickname = userService.profile(userId);
-        return new GetProfileResDto(userNickname);
+    public ResponseEntity getProfile(@PathVariable("userId") Long userId) {
+        try {
+            String userNickname = userService.profile(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetProfileResDto(userNickname)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Profile"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/{userId}/town")
     @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
-    public PostUserTownReqDto postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
-        String town = postUserTownReqDTO.getTown();
-        String userTown = userService.town(userId, town);
-        return new PostUserTownReqDto(userTown);
+    public ResponseEntity postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
+        try {
+            String town = postUserTownReqDTO.getTown();
+            String userTown = userService.town(userId, town);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new PostUserTownReqDto(userTown)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error User Town"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

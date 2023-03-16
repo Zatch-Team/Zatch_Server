@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
-@RequiredArgsConstructor
-@Component
+//@Slf4j
+//@RequiredArgsConstructor
+//@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String AUTHORIZATION_PREFIX = "Bearer ";
 
-    private final JwtProvider jwtProvider;
+//    private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public boolean needToCheckJwt(HttpServletRequest request) {
         String requestUrl = request.getRequestURI();
-        log.info(requestUrl);
+//        log.info(requestUrl);
         if (requestUrl.startsWith("/users/new") || requestUrl.startsWith("/users/login")) {
             return false;
         }
