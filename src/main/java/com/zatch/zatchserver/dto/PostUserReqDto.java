@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostUserReqDto {
     String name;
-    String nickname;
     String email;
-    String password;
 }

@@ -80,9 +80,9 @@ public class UserController {
 
     @GetMapping("/{userId}/profile")
     @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
-    public GetProfileResDTO getProfile(@PathVariable("userId") Long userId) {
+    public GetProfileResDto getProfile(@PathVariable("userId") Long userId) {
         String userNickname = userService.profile(userId);
-        return new GetProfileResDTO(userNickname);
+        return new GetProfileResDto(userNickname);
     }
 
     @PostMapping("/{userId}/town")
