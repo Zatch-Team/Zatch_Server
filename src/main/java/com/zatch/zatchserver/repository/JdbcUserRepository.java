@@ -1,7 +1,12 @@
 package com.zatch.zatchserver.repository;
 
+import com.zatch.zatchserver.DefaultRes;
+import com.zatch.zatchserver.ResponseMessage;
+import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.User;
+import com.zatch.zatchserver.dto.GetUserReqDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -76,41 +81,53 @@ public class JdbcUserRepository implements UserRepository{
 
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
-        String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
-        Object[] params = {newNickname, userId};
-        jdbcTemplate.update(sql, params);
-        System.out.println("Modify nickname sql update");
-        return userId;
+        try {
+            String sql = "UPDATE user SET nickname = ? WHERE user_id = ?";
+            Object[] params = {newNickname, userId};
+            jdbcTemplate.update(sql, params);
+            System.out.println("Modify nickname sql update");
+            return userId;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+        }
     }
 
     @Override
     public List<Map<String, Object>> profile(Long userId) {
-        String sql = "SELECT nickname from user WHERE user_id = ?";
-        Object[] params = {userId};
-        System.out.println("User's profile SQL select");
-        return jdbcTemplate.queryForList(sql, params);
+        try {
+            String sql = "SELECT nickname from user WHERE user_id = ?";
+            Object[] params = {userId};
+            System.out.println("User's profile SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+        }
     }
 
     @Override
     public String townInsert(Long userId, String town){
-        String town1 = jdbcTemplate.queryForObject("SELECT town1 from user WHERE user_id = ?", new Object[]{userId}, String.class);
-        String town2 = jdbcTemplate.queryForObject("SELECT town2 from user WHERE user_id = ?", new Object[]{userId}, String.class);
-        String town3 = jdbcTemplate.queryForObject("SELECT town3 from user WHERE user_id = ?", new Object[]{userId}, String.class);
-        if (town1 == null){
-            jdbcTemplate.update("UPDATE user SET town1 = ? WHERE user_id = ?", town, userId);
-            System.out.println("User's town1 sql update");
+        try {
+            String town1 = jdbcTemplate.queryForObject("SELECT town1 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+            String town2 = jdbcTemplate.queryForObject("SELECT town2 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+            String town3 = jdbcTemplate.queryForObject("SELECT town3 from user WHERE user_id = ?", new Object[]{userId}, String.class);
+            if (town1 == null){
+                jdbcTemplate.update("UPDATE user SET town1 = ? WHERE user_id = ?", town, userId);
+                System.out.println("User's town1 sql update");
+            }
+            else if (town2 == null){
+                jdbcTemplate.update("UPDATE user SET town2 = ? WHERE user_id = ?", town, userId);
+                System.out.println("User's town2 sql update");
+            }
+            else if (town3 == null){
+                jdbcTemplate.update("UPDATE user SET town3 = ? WHERE user_id = ?", town, userId);
+                System.out.println("User's town3 sql update");
+            }
+            else {
+                System.out.println("User's town over 3");
+            }
+            return town;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
         }
-        else if (town2 == null){
-            jdbcTemplate.update("UPDATE user SET town2 = ? WHERE user_id = ?", town, userId);
-            System.out.println("User's town2 sql update");
-        }
-        else if (town3 == null){
-            jdbcTemplate.update("UPDATE user SET town3 = ? WHERE user_id = ?", town, userId);
-            System.out.println("User's town3 sql update");
-        }
-        else {
-            System.out.println("User's town over 3");
-        }
-        return town;
     }
 }
