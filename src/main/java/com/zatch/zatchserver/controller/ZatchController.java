@@ -1,6 +1,8 @@
 package com.zatch.zatchserver.controller;
 
 
+import com.zatch.zatchserver.domain.ExchangeSearch;
+import com.zatch.zatchserver.domain.ViewMyZatch;
 import com.zatch.zatchserver.domain.Zatch;
 import com.zatch.zatchserver.dto.PostZatchReq;
 import com.zatch.zatchserver.service.ZatchService;
@@ -41,5 +43,19 @@ public class ZatchController {
         );
 
         postService.register(newPost);
+    }
+
+    //내 재치 검색어 띄우기
+    @GetMapping("/{userId}/search")
+    @ApiOperation(value = "교환할 수 있는 재치", notes = "검색 시, 내 재치 조회 API")
+    public List<ViewMyZatch> getMyZatch(@PathVariable("userId") Long userId){
+        return postService.getZatchName(userId);
+    }
+
+    //교환할 재치 검색 결과
+    @GetMapping("/{userId}/search/{itemName1}&{itemName2}")
+    @ApiOperation(value = "교환할 재치", notes = "교환 재치 검색 결과 조회 API")
+    public List<ExchangeSearch> getSearch(@PathVariable("itemName1") String itemName1, @PathVariable("itemName2") String itemName2) {
+        return postService.viewAll(itemName1, itemName2);
     }
 }
