@@ -6,14 +6,15 @@ import lombok.Getter;
 public class User {
     private Long id;
     private String name;
-    private String email;
     private String nickname;
+    private String email;
     private String profileImgUrl;
     private String town;
 
     /*---Constructor---*/
-    public User(String name,  String email, String nickname) {
+    public User(String name, String email, String nickname) {
         this.name = name;
+        this.nickname = nickname;
         this.email = email;
         this.nickname = nickname;
     }

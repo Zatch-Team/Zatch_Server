@@ -1,14 +1,19 @@
 package com.zatch.zatchserver.service;
 
-import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 
 import java.util.List;
 
 public interface UserService {
+    String loginOrSignup(String email);
+
     Long join(User user);
 
-    String getUser(String email);
+    String getUserId(String email);
+
+    User getOneById(Long userId);
+
+    List<User> getAll();
 
     Long modifyNickname(Long userId, String newNickname);
 

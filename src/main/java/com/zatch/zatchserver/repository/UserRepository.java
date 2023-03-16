@@ -6,9 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserRepository {
-    Long insert(User user);
+    User selectOneById(Long memberId);
 
-    String getUser(String email);
+    List<User> selectAll();
+
+    String isSignup(String email);
+
+    String getUserId(String email);
+
+    Long insert(User user);
 
     Long modifyNickname(Long userId, String newNickname);
 
