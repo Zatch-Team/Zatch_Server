@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class ZatchService {
@@ -38,5 +40,10 @@ public class ZatchService {
     @Transactional
     public Integer makeZatchDisLike(Long userId, Long zatchId) {
         return zatchRepository.decreaseLike(userId, zatchId);
+    }
+
+    @Transactional
+    public List<String> popularZatchItem() {
+        return zatchRepository.showPopularZatch();
     }
 }

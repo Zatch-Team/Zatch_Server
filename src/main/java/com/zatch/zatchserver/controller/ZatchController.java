@@ -1,13 +1,18 @@
 package com.zatch.zatchserver.controller;
 
 import com.zatch.zatchserver.dto.NewZatchParam;
+import com.zatch.zatchserver.dto.UserInfo;
+import com.zatch.zatchserver.dto.controller.GetPopularZatchItemRes;
+import com.zatch.zatchserver.dto.controller.GetUserRes;
 import com.zatch.zatchserver.dto.controller.PostZatchLikeRes;
 import com.zatch.zatchserver.dto.controller.PostZatchReq;
 import com.zatch.zatchserver.service.ZatchService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,4 +55,13 @@ public class ZatchController {
         return new PostZatchLikeRes(zatchId, likeCount);
 
     }
+
+    @GetMapping("/search/popularItem")
+    @ApiOperation(value = "인기있는 재치 물품", notes = "좋아요 순 조회")
+    public GetPopularZatchItemRes getPopularItem(HttpServletRequest request) {
+        //Long userId = getUserId(request);
+        List<String> popularItem= zatchService.popularZatchItem();
+        return new GetPopularZatchItemRes(popularItem);
+    }
+
 }
