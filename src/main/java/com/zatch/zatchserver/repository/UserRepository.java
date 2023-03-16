@@ -10,6 +10,10 @@ public interface UserRepository {
 
     List<User> selectAll();
 
+    Boolean isSignup(String email);
+
+    String getUserId(String email);
+
     Long insert(User user);
 
     Long modifyNickname(Long userId, String newNickname);

@@ -30,9 +30,30 @@ public class JdbcUserRepository implements UserRepository{
     }
 
     @Override
+    public Boolean isSignup(String email) {
+        String sql = "SELECT user_id from user WHERE email = ?";
+        Object[] params = {email};
+        System.out.println("Is Login or Signup SQL select");
+        // empty >> signup, not_empty >> login
+        if (jdbcTemplate.queryForList(sql, params).isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String getUserId(String email) {
+        String sql = "SELECT user_id from user WHERE email = ?";
+        Object[] params = {email};
+        System.out.println("Login SQL select");
+        String user_id = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("user_id"));
+        return user_id;
+    }
+
+    @Override
     public Long insert(User user) {
-        String sql = "INSERT INTO user(name, nickname, email, password) VALUES(?, ?, ?, ?)";
-        Object[] params = {user.getName(), user.getNickname(), user.getEmail(), user.getPassword()};
+        String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
+        Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
         jdbcTemplate.update(sql, params);
         System.out.println("Signup sql insert");
         return user.getId();

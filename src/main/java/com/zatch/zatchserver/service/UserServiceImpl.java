@@ -1,6 +1,5 @@
 package com.zatch.zatchserver.service;
 
-import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +14,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    public Boolean loginOrSignup(String email) {
+        return userRepository.isSignup(email);
+    }
+
+    @Override
     public Long join(User user) {
         return userRepository.insert(user);
+    }
+
+    @Override
+    public String getUserId(String email) {
+        return userRepository.getUserId(email);
     }
 
     @Override

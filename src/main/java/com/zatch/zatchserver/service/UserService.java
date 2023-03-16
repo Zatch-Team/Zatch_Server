@@ -1,12 +1,15 @@
 package com.zatch.zatchserver.service;
 
-import com.zatch.zatchserver.dto.PostLoginReq;
 import com.zatch.zatchserver.domain.User;
 
 import java.util.List;
 
 public interface UserService {
+    Boolean loginOrSignup(String email);
+
     Long join(User user);
+
+    String getUserId(String email);
 
     User getOneById(Long userId);
 

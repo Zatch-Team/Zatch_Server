@@ -8,7 +8,6 @@ public class User {
     private String name;
     private String nickname;
     private String email;
-    private String password;
     private String profileImgUrl;
     private String town;
 
