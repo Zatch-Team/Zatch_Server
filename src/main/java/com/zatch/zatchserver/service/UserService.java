@@ -5,7 +5,7 @@ import com.zatch.zatchserver.domain.User;
 import java.util.List;
 
 public interface UserService {
-    Boolean loginOrSignup(String email);
+    String loginOrSignup(String email);
 
     Long join(User user);
 

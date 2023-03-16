@@ -1,10 +1,13 @@
 package com.zatch.zatchserver.repository;
 
 import com.zatch.zatchserver.domain.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,33 +33,46 @@ public class JdbcUserRepository implements UserRepository{
     }
 
     @Override
-    public Boolean isSignup(String email) {
-        String sql = "SELECT user_id from user WHERE email = ?";
-        Object[] params = {email};
-        System.out.println("Is Login or Signup SQL select");
-        // empty >> signup, not_empty >> login
-        if (jdbcTemplate.queryForList(sql, params).isEmpty()){
-            return true;
+    public String isSignup(String email) {
+        try{
+            String sql = "SELECT user_id from user WHERE email = ?";
+            Object[] params = {email};
+            System.out.println("Is Login or Signup SQL select");
+            // empty >> signup, not_empty >> login
+            if (jdbcTemplate.queryForList(sql, params).isEmpty()){
+                return "signup";
+            }
+            return "login";
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
         }
-        return false;
     }
 
     @Override
     public String getUserId(String email) {
-        String sql = "SELECT user_id from user WHERE email = ?";
-        Object[] params = {email};
-        System.out.println("Login SQL select");
-        String user_id = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("user_id"));
-        return user_id;
+        try{
+            String sql = "SELECT user_id from user WHERE email = ?";
+            Object[] params = {email};
+            System.out.println("Login SQL select");
+            String user_id = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("user_id"));
+            return user_id;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+        }
     }
 
     @Override
     public Long insert(User user) {
-        String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
-        Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
-        jdbcTemplate.update(sql, params);
-        System.out.println("Signup sql insert");
-        return user.getId();
+        try {
+            System.out.println("user >>> : "+ user.getName());
+            String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
+            Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
+            jdbcTemplate.update(sql, params);
+            System.out.println("Signup sql insert");
+            return user.getId();
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+        }
     }
 
     @Override

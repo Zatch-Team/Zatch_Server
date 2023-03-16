@@ -10,7 +10,7 @@ public interface UserRepository {
 
     List<User> selectAll();
 
-    Boolean isSignup(String email);
+    String isSignup(String email);
 
     String getUserId(String email);
 

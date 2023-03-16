@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public Boolean loginOrSignup(String email) {
+    public String loginOrSignup(String email) {
         return userRepository.isSignup(email);
     }
 

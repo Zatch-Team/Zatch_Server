@@ -28,10 +28,10 @@ public class UserController {
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
     public ResponseEntity postUser(@RequestBody PostUserReqDto postUserReqDto) {
         // 이메일을 통해 회원가입 or 로그인 check
-        Boolean isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
+        String isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
 
         // 회원가입
-        if (isSignup){
+        if (isSignup.equals("signup")){
             List<String> adjectives = Arrays.asList("귀여운", "당황한", "어리둥절", "깜찍한", "동글동글", "초롱초롱", "배고픈", "의아한", "놀라운", "어여쁜", "차분한", "한가한", "화려한", "깨끗한",
                     "정직한", "활발한", "긍정적인", "낙천적인", "다정한", "단호한", "겸손한", "매력적인", "발랄한", "민첩한", "상냥한", "솔직한", "신중한", "용감한", "수줍은", "소중한");
             List<String>  animals = Arrays.asList("강아지", "거북이", "고래", "고양이", "공작", "기린", "까치", "낙타", "너구리", "늑대", "다람쥐", "부엉이", "사슴", "사자", "새우", "수달", "순록",
@@ -55,9 +55,8 @@ public class UserController {
         // 로그인
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
-        System.out.println("here : "+userService.getUserId(email));
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_USER, new GetUserReqDto(email)), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)), HttpStatus.OK);
     }
 
     @GetMapping("/logout")
