@@ -54,7 +54,7 @@ public class ZatchRepositoryImpl implements ZatchRepository {
     }
 
     @Override
-    public List<ViewMyZatch> getZatchName(Long userId){
+    public List<ViewMyZatch> getZatchName(Long userId) {
         List<ViewMyZatch> results = jdbcTemplate.query(
                 "SELECT item_name from zatch where user_id = ?",
                 new RowMapper<ViewMyZatch>() {
@@ -70,18 +70,22 @@ public class ZatchRepositoryImpl implements ZatchRepository {
 
     @Override
     public List<ExchangeSearch> viewAll(String itemName1, String itemName2) {
-        String sql = "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)";
-        Object[] params = {itemName1, itemName2};
-        jdbcTemplate.update(sql, params);
-
-        return (List<ExchangeSearch>) jdbcTemplate.queryForObject(sql, new Object[]{itemName1, itemName2}, (rs, rowNum) ->
-                new ExchangeSearch(
-                        rs.getLong("user_id"),
-                        rs.getInt("is_free"),
-                        rs.getString("item_name"),
-                        rs.getInt("any_zatch"),
-                        rs.getInt("like_count")
-                ));
+        List<ExchangeSearch> results = jdbcTemplate.query(
+                "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)",
+                new RowMapper<ExchangeSearch>() {
+                    @Override
+                    public ExchangeSearch mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        ExchangeSearch exchangeSearch = new ExchangeSearch(
+                                rs.getLong("user_id"),
+                                rs.getInt("is_free"),
+                                rs.getString("item_name"),
+                                rs.getInt("allow_any_zatch"),
+                                rs.getInt("like_count")
+                        );
+                        return exchangeSearch;
+                    }
+                }, itemName1, itemName2);
+        return results.isEmpty() ? null : results;
     }
 }
 
