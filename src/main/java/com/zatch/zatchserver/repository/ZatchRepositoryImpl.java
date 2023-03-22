@@ -7,12 +7,15 @@ import com.zatch.zatchserver.domain.Zatch;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 
@@ -52,18 +55,22 @@ public class ZatchRepositoryImpl implements ZatchRepository {
 
     @Override
     public List<ViewMyZatch> getZatchName(Long userId){
-        String sql = "SELECT item_name from zatch where user_id = ?";
-        Long params = userId;
-        jdbcTemplate.update(sql, params);
-        return (List<ViewMyZatch>) jdbcTemplate.queryForObject(sql, new Object[]{userId}, (rs, rowNum) ->
-                new ViewMyZatch(
-                        rs.getString("item_name")
-                ));
+        List<ViewMyZatch> results = jdbcTemplate.query(
+                "SELECT item_name from zatch where user_id = ?",
+                new RowMapper<ViewMyZatch>() {
+                    @Override
+                    public ViewMyZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        ViewMyZatch myZatch = new ViewMyZatch(
+                                rs.getString("item_name"));
+                        return myZatch;
+                    }
+                }, userId);
+        return results.isEmpty() ? null : results;
     }
 
     @Override
     public List<ExchangeSearch> viewAll(String itemName1, String itemName2) {
-        String sql = "SELECT * from zatch where (item_name LIKE '?' OR item_name LIKE '?')";
+        String sql = "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)";
         Object[] params = {itemName1, itemName2};
         jdbcTemplate.update(sql, params);
 
