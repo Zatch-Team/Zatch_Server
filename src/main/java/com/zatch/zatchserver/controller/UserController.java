@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class UserController {
 
     @PostMapping("/new")
     @ApiOperation(value = "회원가입", notes = "회원가입 API")
-    public ResponseEntity postUser(@RequestBody PostUserReqDto postUserReqDto) {
+    public ResponseEntity postUser(@RequestBody PostUserReqDto postUserReqDto, HttpServletResponse response) {
         // 이메일을 통해 회원가입 or 로그인 check
         String isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
 
@@ -55,8 +56,13 @@ public class UserController {
         // 로그인
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
+        String accessToken = authService.issueAccessToken(Long.valueOf(userId));
+        response.addHeader("ACCESS_TOKEN", accessToken);
+        String token = userService.token(Long.valueOf(userId), accessToken);
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)), HttpStatus.OK);
+        System.out.println("token >>>>> "+token);
+
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)+" / accessToken : "+token), HttpStatus.OK);
     }
 
     @GetMapping("/logout")

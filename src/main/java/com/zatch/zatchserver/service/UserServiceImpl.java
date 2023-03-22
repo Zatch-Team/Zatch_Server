@@ -52,4 +52,9 @@ public class UserServiceImpl implements UserService {
     public String town(Long userId, String town) {
         return userRepository.townInsert(userId, town);
     }
+
+    @Override
+    public String token(Long userId, String token) {
+        return userRepository.insertToken(userId, token);
+    }
 }

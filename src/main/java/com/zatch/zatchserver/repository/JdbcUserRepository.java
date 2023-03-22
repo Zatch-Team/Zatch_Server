@@ -1,12 +1,7 @@
 package com.zatch.zatchserver.repository;
 
-import com.zatch.zatchserver.DefaultRes;
-import com.zatch.zatchserver.ResponseMessage;
-import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.User;
-import com.zatch.zatchserver.dto.GetUserReqDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -130,4 +125,16 @@ public class JdbcUserRepository implements UserRepository{
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
         }
     }
+
+    @Override
+    public String insertToken(Long userId, String token) {
+        try {
+            jdbcTemplate.update("UPDATE zatch.user SET token = ? WHERE user_id = ?", token, userId);
+            System.out.println("Token Insert sql insert");
+            return token;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Token UPDATE Error");
+        }
+    }
+
 }
