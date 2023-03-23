@@ -1,12 +1,7 @@
 package com.zatch.zatchserver.repository;
 
-import com.zatch.zatchserver.DefaultRes;
-import com.zatch.zatchserver.ResponseMessage;
-import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.User;
-import com.zatch.zatchserver.dto.GetUserReqDto;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
@@ -95,12 +90,12 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public List<Map<String, Object>> profile(Long userId) {
         try {
-            String sql = "SELECT nickname from user WHERE user_id = ?";
+            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id FROM zatch.zatch LEFT JOIN zatch.user on zatch.user_id = user.user_id WHERE user.user_id = ? ORDER BY user.created_at DESC;";
             Object[] params = {userId};
             System.out.println("User's profile SQL select");
             return jdbcTemplate.queryForList(sql, params);
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Not Found");
         }
     }
 
@@ -130,4 +125,16 @@ public class JdbcUserRepository implements UserRepository{
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
         }
     }
+
+    @Override
+    public String insertToken(Long userId, String token) {
+        try {
+            jdbcTemplate.update("UPDATE zatch.user SET token = ? WHERE user_id = ?", token, userId);
+            System.out.println("Token Insert sql insert");
+            return token;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Token UPDATE Error");
+        }
+    }
+
 }

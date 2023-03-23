@@ -20,4 +20,6 @@ public interface UserService {
     String profile(Long userId);
 
     String town(Long userId, String town);
+
+    String token(Long userId, String token);
 }

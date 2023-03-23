@@ -21,4 +21,6 @@ public interface UserRepository {
     List<Map<String, Object>> profile(Long userId);
 
     String townInsert(Long userId, String town);
+
+    String insertToken(Long userId, String token);
 }
