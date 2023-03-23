@@ -90,12 +90,12 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public List<Map<String, Object>> profile(Long userId) {
         try {
-            String sql = "SELECT nickname from user WHERE user_id = ?";
+            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id FROM zatch.zatch LEFT JOIN zatch.user on zatch.user_id = user.user_id WHERE user.user_id = ? ORDER BY user.created_at DESC;";
             Object[] params = {userId};
             System.out.println("User's profile SQL select");
             return jdbcTemplate.queryForList(sql, params);
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Not Found");
         }
     }
 

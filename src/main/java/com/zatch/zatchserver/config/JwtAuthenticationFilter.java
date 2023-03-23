@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final String AUTHORIZATION_PREFIX = "Bearer ";
 
