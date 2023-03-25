@@ -90,7 +90,9 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public List<Map<String, Object>> profile(Long userId) {
         try {
-            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id FROM zatch.zatch LEFT JOIN zatch.user on zatch.user_id = user.user_id WHERE user.user_id = ? ORDER BY user.created_at DESC;";
+            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id, zatch.item_name review_context, star_rating " +
+                    "FROM zatch.review_star LEFT JOIN zatch.zatch on review_star.send_user_id = zatch.user_id LEFT JOIN zatch.user on zatch.user_id = user.user_id " +
+                    "WHERE user.user_id = ? ORDER BY review_star.created_at DESC;";
             Object[] params = {userId};
             System.out.println("User's profile SQL select");
             return jdbcTemplate.queryForList(sql, params);
