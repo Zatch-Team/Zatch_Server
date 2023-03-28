@@ -139,4 +139,17 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    @Override
+    public List<Map<String, Object>> getMypage(Long userId) {
+        try {
+            String sql = "SELECT user.user_id, user.nickname, COUNT(*) AS zatch_count, (SELECT COUNT(zatch_like.zatch_id) AS zatch_like_count FROM zatch.zatch_like WHERE user_id = 6) AS zatch_like_count " +
+                    "FROM zatch.zatch AS A LEFT JOIN zatch.user on user.user_id = A.user_id WHERE user.user_id = ?;";
+            Object[] params = {userId};
+            System.out.println("User's My Page SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User My Page Not Found");
+        }
+    }
+
 }
