@@ -71,7 +71,7 @@ public class UserController {
         try {
             HttpSession session = request.getSession();
             session.invalidate();
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, "Success Logout"), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_NICKNAME_EDIT_SUCCESS, "Success Logout"), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Logout"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -85,7 +85,7 @@ public class UserController {
             String newNickname = pathUserNicknameReqDto.getNewNickname();
             Long idOfModifiedUser = userId;
             userService.modifyNickname(idOfModifiedUser, newNickname);
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new PatchUserNicknameResDto(newNickname)), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_NICKNAME_EDIT_SUCCESS, new PatchUserNicknameResDto(newNickname)), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Modify Nickname"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -96,7 +96,7 @@ public class UserController {
     public ResponseEntity getProfile(@PathVariable("userId") Long userId) {
         try {
             String userNickname = userService.profile(userId);
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetProfileResDto(userNickname)), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.MY_PROFILE_SUCCESS, new GetProfileResDto(userNickname)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Profile"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -108,9 +108,21 @@ public class UserController {
         try {
             String town = postUserTownReqDTO.getTown();
             String userTown = userService.town(userId, town);
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new PostUserTownReqDto(userTown)), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_TOWN_SUCCESS, new PostUserTownReqDto(userTown)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error User Town"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{userId}/mypage")
+    @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
+    public ResponseEntity getMypage(@PathVariable("userId") Long userId) {
+        try {
+            String user_id = userService.mypage(userId);
+            System.out.println(user_id);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.MYPAGE_SUCCESS, new GetMypageResDto(user_id)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Profile"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

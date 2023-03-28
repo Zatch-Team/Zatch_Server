@@ -90,7 +90,9 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public List<Map<String, Object>> profile(Long userId) {
         try {
-            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id FROM zatch.zatch LEFT JOIN zatch.user on zatch.user_id = user.user_id WHERE user.user_id = ? ORDER BY user.created_at DESC;";
+            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id, zatch.item_name review_context, star_rating " +
+                    "FROM zatch.review_star LEFT JOIN zatch.zatch on review_star.send_user_id = zatch.user_id LEFT JOIN zatch.user on zatch.user_id = user.user_id " +
+                    "WHERE user.user_id = ? ORDER BY review_star.created_at DESC;";
             Object[] params = {userId};
             System.out.println("User's profile SQL select");
             return jdbcTemplate.queryForList(sql, params);
@@ -134,6 +136,19 @@ public class JdbcUserRepository implements UserRepository{
             return token;
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Token UPDATE Error");
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getMypage(Long userId) {
+        try {
+            String sql = "SELECT user.user_id, user.nickname, COUNT(*) AS zatch_count, (SELECT COUNT(zatch_like.zatch_id) AS zatch_like_count FROM zatch.zatch_like WHERE user_id = 6) AS zatch_like_count " +
+                    "FROM zatch.zatch AS A LEFT JOIN zatch.user on user.user_id = A.user_id WHERE user.user_id = ?;";
+            Object[] params = {userId};
+            System.out.println("User's My Page SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User My Page Not Found");
         }
     }
 
