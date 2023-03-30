@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -43,7 +44,7 @@ public class ZatchService {
     }
 
     @Transactional
-    public List<String> popularZatchItem() {
+    public List<Map<String, Object>> popularZatchItem() {
         return zatchRepository.showPopularZatch();
     }
 }

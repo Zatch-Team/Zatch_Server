@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ZatchRepository {
@@ -63,16 +64,21 @@ public class ZatchRepository {
     }
 
     //지금 인기있는 재치 item 3개 보여주기
-    public List<String> showPopularZatch(){
-        //String showPopularZatchQuery= " select zatch_id, sum(count) as count from zatch_like GROUP BY count";
+    public List<Map<String, Object>> showPopularZatch(){
 
-        String showPopularZatchQuery= "select item_name, sum(count) as count from zatch_like left join zatch on zatch_like.zatch_id=zatch.zatch_id GROUP BY count";
+        String showPopularZatchQuery=
+                "SELECT item_name, count(*) as like_count, zatch.created_at FROM zatch_like left join zatch on zatch_like.zatch_id=zatch.zatch_id GROUP BY item_name ORDER BY like_count desc, zatch.created_at desc";
 
-        List<String> itemName = null;
-        for(int i=0;i<3;i++){
-            itemName.add(String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name")));
-        }
-        return itemName;
+//        List<String> itemName = null;
+//        for(int i=0;i<3;i++){
+//            //System.out.println("@@@@@@@@@ showPopularZatch");
+//            String name=String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name"));
+//            //System.out.println(name);
+//            //itemName.add(String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name")));
+//            itemName.add(name);
+//        }
+        //return itemName;
+        return jdbcTemplate.queryForList(showPopularZatchQuery);
     }
 
 }

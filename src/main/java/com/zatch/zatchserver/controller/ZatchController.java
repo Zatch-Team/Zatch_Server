@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -60,7 +61,7 @@ public class ZatchController {
     @ApiOperation(value = "인기있는 재치 물품", notes = "좋아요 순 조회")
     public GetPopularZatchItemRes getPopularItem(HttpServletRequest request) {
         //Long userId = getUserId(request);
-        List<String> popularItem= zatchService.popularZatchItem();
+        List<Map<String, Object>> popularItem= zatchService.popularZatchItem();
         return new GetPopularZatchItemRes(popularItem);
     }
 
