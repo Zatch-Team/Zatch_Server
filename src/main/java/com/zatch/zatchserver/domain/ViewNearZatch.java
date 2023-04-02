@@ -1,7 +1,10 @@
 package com.zatch.zatchserver.domain;
 
+import lombok.Getter;
+
 import java.util.Date;
 
+@Getter
 public class ViewNearZatch {
     private Long categoryId;
     private Boolean isFree;
