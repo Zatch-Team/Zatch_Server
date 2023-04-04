@@ -50,10 +50,18 @@ public class UserController {
 
             PostUserResDto postUserResDto = new PostUserResDto(newUser.getName(), newUser.getEmail(), adjectives.get(0) + " " + animals.get(0));
 
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_USER, postUserReqDto), HttpStatus.OK);
+            // 토큰
+            String email = postUserReqDto.getEmail();
+            String userId = userService.getUserId(email);
+            String accessToken = authService.issueAccessToken(Long.valueOf(userId));
+            response.addHeader("ACCESS_TOKEN", accessToken);
+            String token = userService.token(Long.valueOf(userId), accessToken);
+
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_USER, postUserReqDto+" / accessToken : "+token+" / userId : "+userId), HttpStatus.OK);
         }
 
         // 로그인
+        // 토큰
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
         String accessToken = authService.issueAccessToken(Long.valueOf(userId));
@@ -62,7 +70,7 @@ public class UserController {
 
         System.out.println("token >>>>> "+token);
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)+" / accessToken : "+token), HttpStatus.OK);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)+" / accessToken : "+token+" / userId : "+userId), HttpStatus.OK);
     }
 
     @GetMapping("/logout")
