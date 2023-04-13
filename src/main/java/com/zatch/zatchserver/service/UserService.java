@@ -1,6 +1,7 @@
 package com.zatch.zatchserver.service;
 
 import com.zatch.zatchserver.domain.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,4 +24,5 @@ public interface UserService {
 
     String token(Long userId, String token);
     String mypage(Long userId);
+    String uploadProfile(Long userId, MultipartFile image);
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -131,6 +132,18 @@ public class UserController {
             return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.MYPAGE_SUCCESS, new GetMypageResDto(user_id)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Profile"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/{userId}/upload_profile")
+    @ApiOperation(value = "회원 프로필 이미지 업로드", notes = "회원 프로필 이미지 업로드 API")
+    public ResponseEntity uploadProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
+        try {
+            System.out.println("param_image : "+image);
+            userService.uploadProfile(userId, image);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.PROFILE_IMAGE_UPLOAD_SUCCESS, image), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Image Upload"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

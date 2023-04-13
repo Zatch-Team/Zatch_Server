@@ -1,12 +1,16 @@
 package com.zatch.zatchserver.repository;
 
 import com.zatch.zatchserver.domain.User;
+import com.zatch.zatchserver.service.S3Uploader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +47,7 @@ public class JdbcUserRepository implements UserRepository{
             }
             return "login";
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Login or Signup Error");
         }
     }
 
@@ -63,14 +67,16 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public Long insert(User user) {
         try {
-            System.out.println("user >>> : "+ user.getName());
+            System.out.println("user name >>> : "+ user.getName());
+            System.out.println("user nickname >>> : "+ user.getNickname());
+            System.out.println("user email >>> : "+ user.getEmail());
             String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
             Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
             jdbcTemplate.update(sql, params);
             System.out.println("Signup sql insert");
             return user.getId();
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Info Insert Error");
         }
     }
 
@@ -83,7 +89,7 @@ public class JdbcUserRepository implements UserRepository{
             System.out.println("Modify nickname sql update");
             return userId;
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Nickname Modify Error");
         }
     }
 
@@ -152,4 +158,23 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    @Autowired
+    private S3Uploader s3Uploader;
+
+    @Override
+    public String uploadProfile(MultipartFile image, Long userId) {
+        if(!image.isEmpty()) {
+            String storedFileName = null;
+            try {
+                storedFileName = s3Uploader.upload(image,"images");
+                System.out.println("filename : "+storedFileName);
+                jdbcTemplate.update("UPDATE zatch.user SET profile_img_url = ? WHERE user_id = ?", storedFileName, userId);
+                System.out.println("Profile image upload sql update");
+                return String.valueOf(image);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Upload Error");
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Empty Error");
+    }
 }

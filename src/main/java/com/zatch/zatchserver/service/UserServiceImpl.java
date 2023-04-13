@@ -3,8 +3,12 @@ package com.zatch.zatchserver.service;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -12,6 +16,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    // S3
+    @Autowired
+    private S3Uploader s3Uploader;
 
     @Override
     public String loginOrSignup(String email) {
@@ -61,5 +69,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String mypage(Long userId) {
         return String.valueOf(userRepository.getMypage(userId));
+    }
+
+    @Override
+    public String uploadProfile(Long userId, MultipartFile image) {
+        return userRepository.uploadProfile(image, userId);
     }
 }
