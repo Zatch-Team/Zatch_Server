@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://zatch-database-dev.cvwoswmfbxnp.ap-northeast-2.rds.amazonaws.com/zatch
+    url: jdbc:mysql://zatch-database.ctnnga0s146x.ap-northeast-2.rds.amazonaws.com/zatch
     username: root
-    password: zatchServer777!
+    password: woclaocl01
 
   jwt:
     secret: zatch_server_jwt_secret_key_1234567890

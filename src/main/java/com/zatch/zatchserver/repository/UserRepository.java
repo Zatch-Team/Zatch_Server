@@ -23,4 +23,6 @@ public interface UserRepository {
     String townInsert(Long userId, String town);
 
     String insertToken(Long userId, String token);
+
+    List<Map<String, Object>> getMypage(Long userId);
 }

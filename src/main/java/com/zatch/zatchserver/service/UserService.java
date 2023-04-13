@@ -22,4 +22,5 @@ public interface UserService {
     String town(Long userId, String town);
 
     String token(Long userId, String token);
+    String mypage(Long userId);
 }

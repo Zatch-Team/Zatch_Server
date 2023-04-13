@@ -57,4 +57,9 @@ public class UserServiceImpl implements UserService {
     public String token(Long userId, String token) {
         return userRepository.insertToken(userId, token);
     }
+
+    @Override
+    public String mypage(Long userId) {
+        return String.valueOf(userRepository.getMypage(userId));
+    }
 }
