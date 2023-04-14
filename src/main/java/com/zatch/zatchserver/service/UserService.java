@@ -23,6 +23,10 @@ public interface UserService {
     String town(Long userId, String town);
 
     String token(Long userId, String token);
+
     String mypage(Long userId);
+
     String uploadProfile(Long userId, MultipartFile image);
+
+    String patchProfile(Long userId, MultipartFile image);
 }

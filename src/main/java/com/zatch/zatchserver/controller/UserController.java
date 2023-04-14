@@ -146,4 +146,16 @@ public class UserController {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Image Upload"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PatchMapping("/{userId}/patch_profile")
+    @ApiOperation(value = "회원 프로필 이미지 수정", notes = "회원 프로필 이미지 수정 API")
+    public ResponseEntity patchProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
+        try {
+            System.out.println("param_image : "+image);
+            userService.patchProfile(userId, image);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.PROFILE_IMAGE_UPLOAD_SUCCESS, image), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Image Upload"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

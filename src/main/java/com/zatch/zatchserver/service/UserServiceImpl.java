@@ -75,4 +75,9 @@ public class UserServiceImpl implements UserService {
     public String uploadProfile(Long userId, MultipartFile image) {
         return userRepository.uploadProfile(image, userId);
     }
+
+    @Override
+    public String patchProfile(Long userId, MultipartFile image) {
+        return userRepository.patchProfile(image, userId);
+    }
 }

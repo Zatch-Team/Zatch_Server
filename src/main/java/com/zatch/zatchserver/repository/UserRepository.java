@@ -28,4 +28,6 @@ public interface UserRepository {
     List<Map<String, Object>> getMypage(Long userId);
 
     String uploadProfile(MultipartFile image, Long userId);
+
+    String patchProfile(MultipartFile image, Long userId);
 }
