@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUserTownReqDto {
-    String town;
+public class PostUserAddressReqDto {
+    String addr_name;
+    String addr_x;
+    String addr_y;
 }
