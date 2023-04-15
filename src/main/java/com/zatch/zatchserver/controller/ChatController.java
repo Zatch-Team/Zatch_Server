@@ -3,6 +3,7 @@ package com.zatch.zatchserver.controller;
 import com.zatch.zatchserver.DefaultRes;
 import com.zatch.zatchserver.ResponseMessage;
 import com.zatch.zatchserver.StatusCode;
+import com.zatch.zatchserver.domain.ChatRoom;
 import com.zatch.zatchserver.dto.PostChatReqDto;
 import com.zatch.zatchserver.service.ChatService;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,6 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 public class ChatController {
 
     private final ChatService chatService;
+
+    @PostMapping
+    public ChatRoom createRoom(@RequestBody String name) {
+        return chatService.createRoom(name);
+    }
+
+    @GetMapping
+    public List<ChatRoom> findAllRoom() {
+        return chatService.findAllRoom();
+    }
 
     //(거래 후) 별점, 후기 등록하기
     @PostMapping("/after_deal")
