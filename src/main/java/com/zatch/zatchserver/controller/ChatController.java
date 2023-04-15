@@ -4,7 +4,6 @@ import com.zatch.zatchserver.DefaultRes;
 import com.zatch.zatchserver.ResponseMessage;
 import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.dto.PostChatReqDto;
-import com.zatch.zatchserver.dto.PostUserTownReqDto;
 import com.zatch.zatchserver.service.ChatService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
