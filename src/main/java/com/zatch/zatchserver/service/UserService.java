@@ -19,7 +19,9 @@ public interface UserService {
 
     String profile(Long userId);
 
-    String town(Long userId, String town);
+    String address(Long userId, String addr_name, String addr_x, String addr_y);
 
     String token(Long userId, String token);
+
+    String mypage(Long userId);
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class GetProfileResDto {
-    private String nickname;
+    private String user_profile;
     // 별점
     // 한 줄 후기 리스트
     // 나의 재치 현황 리스트
