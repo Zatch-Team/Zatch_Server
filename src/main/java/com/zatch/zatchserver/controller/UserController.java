@@ -111,13 +111,15 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{userId}/town")
+    @PostMapping("/{userId}/address")
     @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
-    public ResponseEntity postTown(@PathVariable("userId") Long userId, @RequestBody PostUserTownReqDto postUserTownReqDTO) {
+    public ResponseEntity postAddress(@PathVariable("userId") Long userId, @RequestBody PostUserAddressReqDto postUserAddressReqDTO) {
         try {
-            String town = postUserTownReqDTO.getTown();
-            String userTown = userService.town(userId, town);
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_TOWN_SUCCESS, new PostUserTownReqDto(userTown)), HttpStatus.OK);
+            String addr_name = postUserAddressReqDTO.getAddr_name();
+            String addr_x = postUserAddressReqDTO.getAddr_x();
+            String addr_y = postUserAddressReqDTO.getAddr_y();
+            userService.address(userId, addr_name, addr_x, addr_y);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_TOWN_SUCCESS, new PostUserAddressReqDto(addr_name, addr_x, addr_y)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error User Town"), HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String town(Long userId, String town) {
-        return userRepository.townInsert(userId, town);
+    public String address(Long userId, String addr_name, String addr_x, String addr_y) {
+        return userRepository.addressInsert(userId, addr_name, addr_x, addr_y);
     }
 
     @Override

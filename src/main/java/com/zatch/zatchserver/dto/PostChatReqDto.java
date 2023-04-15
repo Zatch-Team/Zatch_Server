@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUserTownReqDto {
-    String town;
+public class PostChatReqDto {
+    Long send_user_id;
+    Long receive_user_id;
+    String review_context;
+    int star_rating;
 }
