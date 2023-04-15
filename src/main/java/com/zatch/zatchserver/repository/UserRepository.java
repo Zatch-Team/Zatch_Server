@@ -1,6 +1,7 @@
 package com.zatch.zatchserver.repository;
 
 import com.zatch.zatchserver.domain.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +26,8 @@ public interface UserRepository {
     String insertToken(Long userId, String token);
 
     List<Map<String, Object>> getMypage(Long userId);
+
+    String uploadProfile(MultipartFile image, Long userId);
+
+    String patchProfile(MultipartFile image, Long userId);
 }
