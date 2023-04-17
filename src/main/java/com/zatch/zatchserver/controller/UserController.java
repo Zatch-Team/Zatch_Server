@@ -7,9 +7,11 @@ import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.dto.*;
 import com.zatch.zatchserver.service.AuthService;
 import com.zatch.zatchserver.service.UserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.nio.charset.Charset;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -26,8 +29,11 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class, examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PostMapping("/new")
-    @ApiOperation(value = "회원가입", notes = "회원가입 API")
+    @ApiOperation(value = "회원가입", notes = "회원가입 API", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postUser(@RequestBody PostUserReqDto postUserReqDto, HttpServletResponse response) {
         // 이메일을 통해 회원가입 or 로그인 check
         String isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
@@ -41,15 +47,17 @@ public class UserController {
             Collections.shuffle(adjectives);
             Collections.shuffle(animals);
 
+            String nickname = adjectives.get(0) + " " + animals.get(0);
+
             User newUser = new User(
                     postUserReqDto.getName(),
                     postUserReqDto.getEmail(),
-                    adjectives.get(0) + " " + animals.get(0)
+                    nickname
             );
 
             userService.join(newUser);
 
-            PostUserResDto postUserResDto = new PostUserResDto(newUser.getName(), newUser.getEmail(), adjectives.get(0) + " " + animals.get(0));
+            PostUserResDto postUserResDto = new PostUserResDto(newUser.getName(), newUser.getEmail(), nickname);
 
             // 토큰
             String email = postUserReqDto.getEmail();
@@ -58,7 +66,12 @@ public class UserController {
             response.addHeader("ACCESS_TOKEN", accessToken);
             String token = userService.token(Long.valueOf(userId), accessToken);
 
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.CREATED_USER, postUserReqDto+" / accessToken : "+token+" / userId : "+userId), HttpStatus.OK);
+            HttpHeaders header = new HttpHeaders();
+            header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+            GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, postUserReqDto.getEmail());
+
+            return ResponseEntity.ok().body(getUserResDto);
         }
 
         // 로그인

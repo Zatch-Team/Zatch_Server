@@ -1,8 +1,10 @@
 package com.zatch.zatchserver.domain;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class User {
     private Long id;
     private String name;
@@ -15,7 +17,6 @@ public class User {
     /*---Constructor---*/
     public User(String name, String email, String nickname) {
         this.name = name;
-        this.nickname = nickname;
         this.email = email;
     }
 
