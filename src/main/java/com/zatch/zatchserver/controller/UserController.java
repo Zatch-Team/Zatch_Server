@@ -13,6 +13,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +33,8 @@ public class UserController {
     private final AuthService authService;
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class, examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+            @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
     @PostMapping("/new")
     @ApiOperation(value = "회원가입", notes = "회원가입 API", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -89,7 +93,7 @@ public class UserController {
 
     @GetMapping("/logout")
     @ApiOperation(value="로그아웃", notes = "로그아웃 API")
-    public ResponseEntity logout(HttpServletRequest request) throws Exception{
+    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
         try {
             HttpSession session = request.getSession();
             session.invalidate();
