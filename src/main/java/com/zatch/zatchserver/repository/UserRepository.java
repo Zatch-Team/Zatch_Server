@@ -17,6 +17,8 @@ public interface UserRepository {
 
     Long insert(User user);
 
+    String getNickname(String email);
+
     Long modifyNickname(Long userId, String newNickname);
 
     List<Map<String, Object>> profile(Long userId);
@@ -30,4 +32,5 @@ public interface UserRepository {
     String uploadProfile(MultipartFile image, Long userId);
 
     String patchProfile(MultipartFile image, Long userId);
+
 }

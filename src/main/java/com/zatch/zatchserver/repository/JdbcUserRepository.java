@@ -92,6 +92,20 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    @Override
+    public String getNickname(String email) {
+        try{
+            String sql = "SELECT nickname from user WHERE email = ?";
+            Object[] params = {email};
+            System.out.println("Get Nickname SQL select");
+            String nickname = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("nickname"));
+            System.out.println("Nickname : " + nickname);
+            return nickname;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Nickname Not Found");
+        }
+    }
+
     // 닉네임 수정
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
