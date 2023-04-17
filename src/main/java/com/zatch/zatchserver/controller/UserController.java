@@ -117,6 +117,10 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetProfileResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @GetMapping("/{userId}/profile")
     @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
     public ResponseEntity getProfile(@PathVariable("userId") Long userId) {
@@ -143,7 +147,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/mypage")
-    @ApiOperation(value = "회원 프로필", notes = "회원 프로필 API")
+    @ApiOperation(value = "회원 마이페이지", notes = "회원 마이페이지 API")
     public ResponseEntity getMypage(@PathVariable("userId") Long userId) {
         try {
             String user_id = userService.mypage(userId);
@@ -155,7 +159,7 @@ public class UserController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class,
+            @ApiResponse(code = 200, message = "Success", response = PostProfileImgDto.class,
                     examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
     @PostMapping("/{userId}/upload_profile")
@@ -170,6 +174,10 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PostProfileImgDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PatchMapping("/{userId}/patch_profile")
     @ApiOperation(value = "회원 프로필 이미지 수정", notes = "회원 프로필 이미지 수정 API")
     public ResponseEntity patchProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
