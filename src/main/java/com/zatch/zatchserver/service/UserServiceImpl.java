@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getNickname(String email) {
+        return userRepository.getNickname(email);
+    }
+
+    @Override
     public Long modifyNickname(Long userId, String newNickname) {
         return userRepository.modifyNickname(userId, newNickname);
     }

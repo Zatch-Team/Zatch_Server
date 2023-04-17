@@ -34,7 +34,7 @@ public class UserController {
                     examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
     @PostMapping("/new")
-    @ApiOperation(value = "회원가입", notes = "회원가입 API", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "회원가입/로그인", notes = "회원가입/로그인 API", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity postUser(@RequestBody PostUserReqDto postUserReqDto, HttpServletResponse response) {
         // 이메일을 통해 회원가입 or 로그인 check
         String isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
@@ -79,13 +79,16 @@ public class UserController {
         // 토큰
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
+        String nickname = userService.getNickname(email);
         String accessToken = authService.issueAccessToken(Long.valueOf(userId));
         response.addHeader("ACCESS_TOKEN", accessToken);
         String token = userService.token(Long.valueOf(userId), accessToken);
 
         System.out.println("token >>>>> "+token);
 
-        return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.LOGIN_SUCCESS, new GetUserReqDto(email)+" / accessToken : "+token+" / userId : "+userId), HttpStatus.OK);
+        GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email);
+
+        return ResponseEntity.ok().body(getUserResDto);
     }
 
     @GetMapping("/logout")
@@ -151,8 +154,12 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PostMapping("/{userId}/upload_profile")
-    @ApiOperation(value = "회원 프로필 이미지 업로드", notes = "회원 프로필 이미지 업로드 API")
+    @ApiOperation(value = "회원 프로필 이미지 업로드", notes = "회원 프로필 이미지 업로드 API", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity uploadProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
         try {
             System.out.println("param_image : "+image);
