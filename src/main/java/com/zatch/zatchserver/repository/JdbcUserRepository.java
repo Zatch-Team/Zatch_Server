@@ -1,12 +1,16 @@
 package com.zatch.zatchserver.repository;
 
 import com.zatch.zatchserver.domain.User;
+import com.zatch.zatchserver.service.S3Uploader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class JdbcUserRepository implements UserRepository{
         return null;
     }
 
+    // 회원가입 or 로그인 확인
     @Override
     public String isSignup(String email) {
         try{
@@ -43,7 +48,8 @@ public class JdbcUserRepository implements UserRepository{
             }
             return "login";
         } catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Login or Signup Error");        }
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Login or Signup Error");
+        }
     }
 
     @Override
@@ -59,10 +65,13 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 회원가입
     @Override
     public Long insert(User user) {
         try {
-            System.out.println("user >>> : "+ user.getName());
+            System.out.println("user name >>> : "+ user.getName());
+            System.out.println("user nickname >>> : "+ user.getNickname());
+            System.out.println("user email >>> : "+ user.getEmail());
             String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
             Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
             jdbcTemplate.update(sql, params);
@@ -83,6 +92,7 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 닉네임 수정
     @Override
     public Long modifyNickname(Long userId, String newNickname) {
         try {
@@ -96,10 +106,16 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 프로필 보기
     @Override
     public List<Map<String, Object>> profile(Long userId) {
         try {
-            String sql = "SELECT user.user_id, user.nickname, zatch.zatch_id, zatch.item_name review_context, star_rating " +
+            // 재치 없을 때
+
+            // 후기 없을 때
+
+            // DB 바뀌면서 item_name -> md_name 변경됨
+            String sql = "SELECT user.user_id, user.nickname, user.profile_img_url, zatch.zatch_id, zatch.md_name review_context, star_rating " +
                     "FROM zatch.review_star LEFT JOIN zatch.zatch on review_star.send_user_id = zatch.user_id LEFT JOIN zatch.user on zatch.user_id = user.user_id " +
                     "WHERE user.user_id = ? ORDER BY review_star.created_at DESC;";
             Object[] params = {userId};
@@ -110,6 +126,7 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 동네 설정
     @Override
     public String addressInsert(Long userId, String addr_name, String addr_x, String addr_y){
         try {
@@ -138,6 +155,7 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 토큰
     @Override
     public String insertToken(Long userId, String token) {
         try {
@@ -149,12 +167,13 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // 마이페이지 보기
     @Override
     public List<Map<String, Object>> getMypage(Long userId) {
         try {
-            String sql = "SELECT user.user_id, user.nickname, COUNT(*) AS zatch_count, (SELECT COUNT(zatch_like.zatch_id) AS zatch_like_count FROM zatch.zatch_like WHERE user_id = 6) AS zatch_like_count " +
+            String sql = "SELECT user.user_id, user.nickname, user.profile_img_url, COUNT(*) AS zatch_count, (SELECT COUNT(zatch_like.zatch_id) AS zatch_like_count FROM zatch.zatch_like WHERE user_id = ?) AS zatch_like_count " +
                     "FROM zatch.zatch AS A LEFT JOIN zatch.user on user.user_id = A.user_id WHERE user.user_id = ?;";
-            Object[] params = {userId};
+            Object[] params = {userId, userId};
             System.out.println("User's My Page SQL select");
             return jdbcTemplate.queryForList(sql, params);
         } catch (Exception e){
@@ -162,4 +181,43 @@ public class JdbcUserRepository implements UserRepository{
         }
     }
 
+    // S3
+    @Autowired
+    private S3Uploader s3Uploader;
+
+    // 프로필 이미지 업로드
+    @Override
+    public String uploadProfile(MultipartFile image, Long userId) {
+        if(!image.isEmpty()) {
+            String storedFileName = null;
+            try {
+                storedFileName = s3Uploader.upload(image,"images");
+                System.out.println("filename : "+storedFileName);
+                jdbcTemplate.update("UPDATE zatch.user SET profile_img_url = ? WHERE user_id = ?", storedFileName, userId);
+                System.out.println("Profile image upload sql update");
+                return String.valueOf(image);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Upload Error");
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Empty Error");
+    }
+
+    // 프로필 이미지 수정
+    @Override
+    public String patchProfile(MultipartFile image, Long userId) {
+        if(!image.isEmpty()) {
+            String storedFileName = null;
+            try {
+                storedFileName = s3Uploader.upload(image,"images");
+                System.out.println("filename : "+storedFileName);
+                jdbcTemplate.update("UPDATE zatch.user SET profile_img_url = ? WHERE user_id = ?", storedFileName, userId);
+                System.out.println("Profile image upload sql update");
+                return String.valueOf(image);
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Upload Error");
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Empty Error");
+    }
 }
