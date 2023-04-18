@@ -103,10 +103,13 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PatchUserNicknameResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PatchMapping("/{userId}/nickname")
     @ApiOperation(value = "회원 닉네임 수정", notes = "회원 닉네임 수정 API")
-    public ResponseEntity patchNickname(@PathVariable("userId") Long userId
-            , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
+    public ResponseEntity patchNickname(@PathVariable("userId") Long userId , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
         try {
             String newNickname = pathUserNicknameReqDto.getNewNickname();
             Long idOfModifiedUser = userId;
@@ -132,6 +135,10 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PostUserAddressReqDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PostMapping("/{userId}/address")
     @ApiOperation(value = "회원 동네", notes = "회원 동네 API")
     public ResponseEntity postAddress(@PathVariable("userId") Long userId, @RequestBody PostUserAddressReqDto postUserAddressReqDTO) {
@@ -146,6 +153,10 @@ public class UserController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetMypageResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @GetMapping("/{userId}/mypage")
     @ApiOperation(value = "회원 마이페이지", notes = "회원 마이페이지 API")
     public ResponseEntity getMypage(@PathVariable("userId") Long userId) {
