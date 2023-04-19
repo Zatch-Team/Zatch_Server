@@ -34,18 +34,16 @@ public class JwtProvider {
     }
 
     // refresh token
-    public JwtRefreshToken createRefreshToken(Long userId) {
+    public String createRefreshToken(Long userId) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION);
 
-        String token = Jwts.builder()
+        return Jwts.builder()
                 .claim("userId", userId)
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
-
-        return new JwtRefreshToken(token);
     }
 
     // token에서 userId 추출하기

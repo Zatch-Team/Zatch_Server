@@ -80,11 +80,8 @@ public class UserController {
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
         String nickname = userService.getNickname(email);
-//        String accessToken = authService.issueAccessToken(Long.valueOf(userId));
-//        response.addHeader("ACCESS_TOKEN", accessToken);
-//        String token = userService.token(Long.valueOf(userId), accessToken);
-//
-//        System.out.println("token >>>>> "+token);
+        String refreshToken = String.valueOf(authService.issueRefreshToken(Long.valueOf(userId)));
+        response.addHeader("ACCESS_TOKEN", refreshToken);
 
         GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email);
 
