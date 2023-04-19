@@ -70,7 +70,7 @@ public class UserController {
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-            GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, postUserReqDto.getEmail());
+            GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, postUserReqDto.getEmail(), accessToken);
 
             return ResponseEntity.ok().body(getUserResDto);
         }
@@ -83,7 +83,7 @@ public class UserController {
         String refreshToken = String.valueOf(authService.issueRefreshToken(Long.valueOf(userId)));
         response.addHeader("ACCESS_TOKEN", refreshToken);
 
-        GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email);
+        GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email, refreshToken);
 
         return ResponseEntity.ok().body(getUserResDto);
     }
