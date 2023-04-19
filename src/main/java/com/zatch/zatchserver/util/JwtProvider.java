@@ -1,28 +1,52 @@
 package com.zatch.zatchserver.util;
 
+import com.zatch.zatchserver.dto.JwtRefreshToken;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtProvider {
+
+    private final long ACCESS_TOKEN_EXPIRATION = 365 * 24 * 60 * 60 * 1000; // 365일
+    private static final long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000L;
+
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
 
-    private final Integer ACCESS_TOKEN_EXPIRATION = 365 * 24 * 60 * 60 * 1000; // 365일
-
+    // access token
     public String createToken(Long userId) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + ACCESS_TOKEN_EXPIRATION);
+
         return Jwts.builder()
                 .claim("userId", userId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .setIssuedAt(now)
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
+    // refresh token
+    public String createRefreshToken(Long userId) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + REFRESH_TOKEN_EXPIRATION);
+
+        return Jwts.builder()
+                .claim("userId", userId)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    // token에서 userId 추출하기
     public Long parse(String jwt) {
         return Long.parseLong(
                 Jwts.parser()
@@ -43,4 +67,5 @@ public class JwtProvider {
                 .getExpiration()
                 .after(new Date());
     }
+
 }

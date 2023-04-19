@@ -60,7 +60,7 @@ public class UserController {
 
             PostUserResDto postUserResDto = new PostUserResDto(newUser.getName(), newUser.getEmail(), nickname);
 
-            // 토큰
+            // access_token
             String email = postUserReqDto.getEmail();
             String userId = userService.getUserId(email);
             String accessToken = authService.issueAccessToken(Long.valueOf(userId));
@@ -70,23 +70,20 @@ public class UserController {
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-            GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, postUserReqDto.getEmail());
+            GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, postUserReqDto.getEmail(), accessToken);
 
             return ResponseEntity.ok().body(getUserResDto);
         }
 
         // 로그인
-        // 토큰
+        // refresh_token
         String email = postUserReqDto.getEmail();
         String userId = userService.getUserId(email);
         String nickname = userService.getNickname(email);
-        String accessToken = authService.issueAccessToken(Long.valueOf(userId));
-        response.addHeader("ACCESS_TOKEN", accessToken);
-        String token = userService.token(Long.valueOf(userId), accessToken);
+        String refreshToken = String.valueOf(authService.issueRefreshToken(Long.valueOf(userId)));
+        response.addHeader("ACCESS_TOKEN", refreshToken);
 
-        System.out.println("token >>>>> "+token);
-
-        GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email);
+        GetUserResDto getUserResDto = new GetUserResDto(Long.valueOf(userId), postUserReqDto.getName(), nickname, email, refreshToken);
 
         return ResponseEntity.ok().body(getUserResDto);
     }

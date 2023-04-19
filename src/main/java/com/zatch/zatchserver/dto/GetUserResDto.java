@@ -20,4 +20,7 @@ public class GetUserResDto {
 
     @ApiModelProperty(value = "User 이메일", example = "email123@sungshin.ac.kr")
     private String email;
+
+    @ApiModelProperty(value = "User 토큰", example = "abcdefg1234567")
+    private String token;
 }
