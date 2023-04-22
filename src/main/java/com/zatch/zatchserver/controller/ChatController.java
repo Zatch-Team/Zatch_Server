@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,13 +24,23 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
+    @ApiOperation(value = "채팅방 생성", notes = "채팅방 생성 API")
     public ChatRoom createRoom(@RequestBody String name) {
         return chatService.createRoom(name);
     }
 
+    // 현재 열려있는 채팅방
     @GetMapping
+    @ApiOperation(value = "현재 열려있는 채팅방", notes = "현재 열려있는 채팅방 API")
     public List<ChatRoom> findAllRoom() {
         return chatService.findAllRoom();
+    }
+
+    // 모든 채팅방 리스트
+    @GetMapping("/chat_list/{userId}")
+    @ApiOperation(value = "모든 채팅방 리스트", notes = "모든 채팅방 리스트 API")
+    public List<Map<String, Object>> getAllChatRoom(@PathVariable("userId") String userId) {
+        return chatService.getAllChatRoom(userId);
     }
 
     //(거래 후) 별점, 후기 등록하기
