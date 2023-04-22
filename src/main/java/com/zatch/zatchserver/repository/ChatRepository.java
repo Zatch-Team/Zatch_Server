@@ -1,9 +1,9 @@
 package com.zatch.zatchserver.repository;
 
-import com.zatch.zatchserver.domain.ChatRoom;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -36,12 +36,27 @@ public class ChatRepository implements ChatRepositoryImpl {
     @Override
     public String updateDB(String type, String roomId, String sender, String receiver, String message) {
         try {
-            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver" + receiver + " / message" + message;
+            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver : " + receiver + " / message : " + message;
             System.out.println(chat_info);
             String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_receiver, chat_message) VALUES(?, ?, ?, ?, ?)";
             Object[] params = {type, roomId, sender, receiver, message};
             jdbcTemplate.update(sql, params);
             System.out.println("chat sql insert");
+            return chat_info;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chat SQL ERROR");
+        }
+    }
+
+    @Override
+    public String sendImage(String type, String roomId, String sender, String receiver, String imgUrl) {
+        try {
+            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver : " + receiver + " / imgUrl : " + imgUrl;
+            System.out.println(chat_info);
+            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_receiver, chat_img_url) VALUES(?, ?, ?, ?, ?)";
+            Object[] params = {type, roomId, sender, receiver, imgUrl};
+            jdbcTemplate.update(sql, params);
+            System.out.println("chat img sql insert");
             return chat_info;
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chat SQL ERROR");
