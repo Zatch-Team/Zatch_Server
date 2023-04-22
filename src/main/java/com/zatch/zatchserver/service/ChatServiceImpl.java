@@ -6,6 +6,7 @@ import com.zatch.zatchserver.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -67,5 +68,10 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public String updateDB(String type, String roomId, String sender, String receiver, String message) {
         return chatRepository.updateDB(type, roomId, sender, receiver, message);
+    }
+
+    @Override
+    public String sendImage(String type, String roomId, String sender, String receiver, String imgUrl) {
+        return chatRepository.sendImage(type, roomId, sender, receiver, imgUrl);
     }
 }
