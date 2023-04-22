@@ -42,7 +42,13 @@ public class ChatServiceImpl implements ChatService {
                 .name(name)
                 .build();
         chatRooms.put(randomId, chatRoom);
+        System.out.println("chatRooms : "+ chatRooms.values());
         return chatRoom;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllChatRoom(String userId) {
+        return chatRepository.selectAllChatRoom(userId);
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {
@@ -59,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public String updateDB(String type, String roomId, String sender, String message) {
-        return chatRepository.updateDB(type, roomId, sender, message);
+    public String updateDB(String type, String roomId, String sender, String receiver, String message) {
+        return chatRepository.updateDB(type, roomId, sender, receiver, message);
     }
 }

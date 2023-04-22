@@ -1,9 +1,13 @@
 package com.zatch.zatchserver.repository;
 
+import com.zatch.zatchserver.domain.ChatRoom;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ChatRepository implements ChatRepositoryImpl {
@@ -14,12 +18,28 @@ public class ChatRepository implements ChatRepositoryImpl {
     }
 
     @Override
-    public String updateDB(String type, String roomId, String sender, String message) {
+    public List<Map<String, Object>> selectAllChatRoom(String userId) {
         try {
-            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / message" + message;
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at " +
+                    "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
+                    "WHERE chat_sender = ? or chat_receiver = ? " +
+                    "GROUP BY chat_room_id " +
+                    "ORDER BY chat.updated_at DESC;";
+            Object[] params = {userId, userId};
+            System.out.println("User's Chat List SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's Chat List Not Found");
+        }
+    }
+
+    @Override
+    public String updateDB(String type, String roomId, String sender, String receiver, String message) {
+        try {
+            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver" + receiver + " / message" + message;
             System.out.println(chat_info);
-            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_message) VALUES(?, ?, ?, ?)";
-            Object[] params = {type, roomId, sender, message};
+            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_receiver, chat_message) VALUES(?, ?, ?, ?, ?)";
+            Object[] params = {type, roomId, sender, receiver, message};
             jdbcTemplate.update(sql, params);
             System.out.println("chat sql insert");
             return chat_info;
