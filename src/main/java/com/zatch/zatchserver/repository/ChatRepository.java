@@ -20,7 +20,7 @@ public class ChatRepository implements ChatRepositoryImpl {
     @Override
     public List<Map<String, Object>> selectAllChatRoom(String userId) {
         try {
-            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at " +
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at, user.nickname AS chat_reciver_nickname  " +
                     "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
                     "WHERE chat_sender = ? or chat_receiver = ? " +
                     "GROUP BY chat_room_id " +
