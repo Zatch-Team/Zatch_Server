@@ -65,4 +65,15 @@ public class ChatController {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error After Chat(Review&Star)"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // 채팅 참여자 목록 보기
+    @GetMapping("/{userId}/{roomId}/profile")
+    @ApiOperation(value = "채팅 참여자 목록 보기", notes = "채팅 참여자 목록 보기 API")
+    public List<Map<String, Object>> profileChatRoom(@PathVariable("userId") String userId, @PathVariable("roomId") String roomId) {
+        return chatService.profileChatRoom(userId, roomId);
+    }
+
+    // 차단 & 신고하기
+
+
 }

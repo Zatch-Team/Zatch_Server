@@ -17,4 +17,5 @@ public interface ChatService {
     String updateDB(String type, String roomId, String sender, String receiver, String message);
     String sendImage(String type, String roomId, String sender, String receiver, String imgUrl);
     String outChatRoom(String userId, String roomId);
+    List<Map<String, Object>> profileChatRoom(String userId, String roomId);
 }

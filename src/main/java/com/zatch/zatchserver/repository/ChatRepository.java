@@ -3,7 +3,6 @@ package com.zatch.zatchserver.repository;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class ChatRepository implements ChatRepositoryImpl {
     @Override
     public List<Map<String, Object>> selectAllChatRoom(String userId) {
         try {
-            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at " +
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at, user.nickname AS chat_reciver_nickname  " +
                     "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
                     "WHERE chat_sender = ? or chat_receiver = ? " +
                     "GROUP BY chat_room_id " +
@@ -85,6 +84,22 @@ public class ChatRepository implements ChatRepositoryImpl {
             return userId + " : " + roomId + "삭제";
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Delete Chat Room Not Found");
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getProfileChatRoom(String userId, String roomId) {
+        try {
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, " +
+                    "(SELECT user.nickname FROM user WHERE user.user_id = chat.chat_sender) AS chat_sender_nickname, " +
+                    "(SELECT user.nickname FROM user WHERE user.user_id = chat.chat_receiver) AS chat_receiver_nickname " +
+                    "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
+                    "WHERE (chat_sender = ? OR chat_receiver = ?) AND chat_room_id = ?";
+            Object[] params = {userId, userId, roomId};
+            System.out.println("User's Chat Profile SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's Chat List Not Found");
         }
     }
 }
