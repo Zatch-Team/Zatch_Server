@@ -43,6 +43,13 @@ public class ChatController {
         return chatService.getAllChatRoom(userId);
     }
 
+    // 채팅방 나가기
+    @GetMapping("/chat_out/{userId}/{roomId}")
+    @ApiOperation(value = "채팅방 나가기", notes = "채팅방 나가기 API")
+    public String outChatRoom(@PathVariable("userId") String userId, @PathVariable("roomId") String roomId) {
+        return chatService.outChatRoom(userId, roomId);
+    }
+
     //(거래 후) 별점, 후기 등록하기
     @PostMapping("/after_deal")
     @ApiOperation(value = "별점&후기 등록", notes = "별점&후기 등록 API")

@@ -75,4 +75,16 @@ public class ChatRepository implements ChatRepositoryImpl {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "After Chat >> Review or Star Not Found");
         }
     }
+
+    @Override
+    public String deleteChatRoom(String userId, String roomId) {
+        try {
+            String sql = "DELETE FROM chat WHERE (chat_sender = ? OR chat_receiver = ?) AND chat_room_id = ?";
+            jdbcTemplate.update(sql, userId, userId, roomId);
+            System.out.println("chat room delete");
+            return userId + " : " + roomId + "삭제";
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Delete Chat Room Not Found");
+        }
+    }
 }
