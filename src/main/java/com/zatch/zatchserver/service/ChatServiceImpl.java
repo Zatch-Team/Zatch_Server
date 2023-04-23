@@ -79,4 +79,9 @@ public class ChatServiceImpl implements ChatService {
     public String outChatRoom(String userId, String roomId) {
         return chatRepository.deleteChatRoom(userId, roomId);
     }
+
+    @Override
+    public List<Map<String, Object>> profileChatRoom(String userId, String roomId) {
+        return chatRepository.getProfileChatRoom(userId, roomId);
+    }
 }
