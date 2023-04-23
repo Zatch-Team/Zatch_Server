@@ -74,4 +74,9 @@ public class ChatServiceImpl implements ChatService {
     public String sendImage(String type, String roomId, String sender, String receiver, String imgUrl) {
         return chatRepository.sendImage(type, roomId, sender, receiver, imgUrl);
     }
+
+    @Override
+    public String outChatRoom(String userId, String roomId) {
+        return chatRepository.deleteChatRoom(userId, roomId);
+    }
 }
