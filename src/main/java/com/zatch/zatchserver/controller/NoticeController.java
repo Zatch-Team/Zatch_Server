@@ -34,7 +34,7 @@ public class NoticeController {
     public ResponseEntity getNocite() {
         try {
             List<Map<String, Object>> notice = noticeService.getAllNotice();
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.MY_PROFILE_SUCCESS, new GetNoticeResDto(notice)), HttpStatus.OK);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.NOTICE_ERROR, new GetNoticeResDto(notice)), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Profile"), HttpStatus.INTERNAL_SERVER_ERROR);
         }

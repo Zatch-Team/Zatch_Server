@@ -19,4 +19,10 @@ public class ResponseMessage {
 
     public static final String AFTER_CHAT_SUCCESS = "채팅 후기&리뷰 작성 성공";
     public static final String AFTER_CHAT_ERROR = "채팅 후기&리뷰 작성 에러";
+
+    public static final String NOTICE_ERROR = "공지사항 불러오기 에러";
+
+    public static final String REPORT_SUCCESS = "차단하기 성공";
+    public static final String REPORT_NULL = "차단하기 전송 NULL";
+    public static final String REPORT_ERROR = "차단하기 에러";
 }
