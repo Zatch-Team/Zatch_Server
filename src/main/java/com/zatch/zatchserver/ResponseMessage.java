@@ -22,7 +22,11 @@ public class ResponseMessage {
 
     public static final String NOTICE_ERROR = "공지사항 불러오기 에러";
 
-    public static final String REPORT_SUCCESS = "차단하기 성공";
-    public static final String REPORT_NULL = "차단하기 전송 NULL";
-    public static final String REPORT_ERROR = "차단하기 에러";
+    public static final String REPORT_SUCCESS = "신고하기 성공";
+    public static final String REPORT_NULL = "신고하기 전송 NULL";
+    public static final String REPORT_ERROR = "신고하기 에러";
+
+    public static final String BLOCK_SUCCESS = "차단하기 성공";
+    public static final String BLOCK_NULL = "차단하기 전송 NULL";
+    public static final String BLOCK_ERROR = "차단하기 에러";
 }

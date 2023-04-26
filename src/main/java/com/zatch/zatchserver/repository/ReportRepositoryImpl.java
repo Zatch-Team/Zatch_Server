@@ -19,7 +19,7 @@ public class ReportRepositoryImpl implements ReportRepository {
             String sql = "INSERT INTO report (reported_id, reporter_id, report_reason) VALUES (?, ?, ?);";
             Object[] params = {userId, reportedId, reportReason};
             jdbcTemplate.update(sql, params);
-            return userId + " -> " + reportedId + "Repost Success";
+            return userId + " -> " + reportedId + "Report Success";
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Post Report Error");
         }

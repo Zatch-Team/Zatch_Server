@@ -4,9 +4,6 @@ import com.zatch.zatchserver.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-
 @RequiredArgsConstructor
 @Service
 public class ReportServiceImpl implements ReportService{
