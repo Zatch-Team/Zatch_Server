@@ -14,7 +14,7 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
 class JwtProviderTest {
     @Autowired
     JwtProvider jwtProvider;
