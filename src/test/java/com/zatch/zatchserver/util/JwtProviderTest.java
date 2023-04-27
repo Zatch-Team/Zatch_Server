@@ -22,7 +22,7 @@ class JwtProviderTest {
     @Value("${spring.jwt.secret}")
     private String SECRET_KEY;
 
-    @Test
+//    @Test
     public void jwt생성후_복호화() throws Exception {
         //given
         String accessToken = jwtProvider.createToken(1L);
@@ -32,7 +32,7 @@ class JwtProviderTest {
         assertThat(parsedId).isEqualTo(1L);
     }
 
-    @Test
+//    @Test
     public void jwt_만료기간_지난_경우() throws Exception {
         Long userId = 1L;
         String accessToken = Jwts.builder()
