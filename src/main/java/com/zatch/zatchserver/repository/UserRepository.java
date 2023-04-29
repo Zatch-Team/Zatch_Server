@@ -33,4 +33,6 @@ public interface UserRepository {
 
     String patchProfile(MultipartFile image, Long userId);
 
+    Long deleteUser(Long userId);
+
 }

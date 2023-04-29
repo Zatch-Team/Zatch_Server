@@ -85,4 +85,9 @@ public class UserServiceImpl implements UserService {
     public String patchProfile(Long userId, MultipartFile image) {
         return userRepository.patchProfile(image, userId);
     }
+
+    @Override
+    public Long deleteUser(Long userId) {
+        return userRepository.deleteUser(userId);
+    }
 }

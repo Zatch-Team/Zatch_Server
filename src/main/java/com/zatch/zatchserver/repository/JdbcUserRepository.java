@@ -234,4 +234,16 @@ public class JdbcUserRepository implements UserRepository{
         }
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Empty Error");
     }
+
+    @Override
+    public Long deleteUser(Long userId) {
+        try {
+            jdbcTemplate.update("DELETE FROM user WHERE user_id = ?", userId);
+            jdbcTemplate.update("DELETE FROM address WHERE user_id = ?", userId);
+            System.out.println("User Delete");
+            return userId;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Delete Fail");
+        }
+    }
 }
