@@ -19,4 +19,7 @@ public class ResponseMessage {
 
     public static final String AFTER_CHAT_SUCCESS = "채팅 후기&리뷰 작성 성공";
     public static final String AFTER_CHAT_ERROR = "채팅 후기&리뷰 작성 에러";
+
+
+    public static final String USER_DELETE_SUCCESS = "회원 탈퇴 성공";
 }

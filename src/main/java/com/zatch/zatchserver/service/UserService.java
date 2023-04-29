@@ -31,4 +31,6 @@ public interface UserService {
     String uploadProfile(Long userId, MultipartFile image);
 
     String patchProfile(Long userId, MultipartFile image);
+
+    Long deleteUser(Long userId);
 }
