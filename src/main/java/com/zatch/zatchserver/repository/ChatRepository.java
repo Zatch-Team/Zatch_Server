@@ -5,6 +5,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.Map;
+
 @Repository
 public class ChatRepository implements ChatRepositoryImpl {
     private final JdbcTemplate jdbcTemplate;
@@ -14,14 +17,45 @@ public class ChatRepository implements ChatRepositoryImpl {
     }
 
     @Override
-    public String updateDB(String type, String roomId, String sender, String message) {
+    public List<Map<String, Object>> selectAllChatRoom(String userId) {
         try {
-            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / message" + message;
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, chat_message, profile_img_url, chat.updated_at, user.nickname AS chat_reciver_nickname  " +
+                    "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
+                    "WHERE chat_sender = ? or chat_receiver = ? " +
+                    "GROUP BY chat_room_id " +
+                    "ORDER BY chat.updated_at DESC;";
+            Object[] params = {userId, userId};
+            System.out.println("User's Chat List SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's Chat List Not Found");
+        }
+    }
+
+    @Override
+    public String updateDB(String type, String roomId, String sender, String receiver, String message) {
+        try {
+            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver : " + receiver + " / message : " + message;
             System.out.println(chat_info);
-            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_message) VALUES(?, ?, ?, ?)";
-            Object[] params = {type, roomId, sender, message};
+            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_receiver, chat_message) VALUES(?, ?, ?, ?, ?)";
+            Object[] params = {type, roomId, sender, receiver, message};
             jdbcTemplate.update(sql, params);
             System.out.println("chat sql insert");
+            return chat_info;
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chat SQL ERROR");
+        }
+    }
+
+    @Override
+    public String sendImage(String type, String roomId, String sender, String receiver, String imgUrl) {
+        try {
+            String chat_info = "type : " + type + " / roomId : " + roomId + " / sender" + sender + " / receiver : " + receiver + " / imgUrl : " + imgUrl;
+            System.out.println(chat_info);
+            String sql = "INSERT INTO chat(chat_type, chat_room_id, chat_sender, chat_receiver, chat_img_url) VALUES(?, ?, ?, ?, ?)";
+            Object[] params = {type, roomId, sender, receiver, imgUrl};
+            jdbcTemplate.update(sql, params);
+            System.out.println("chat img sql insert");
             return chat_info;
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Chat SQL ERROR");
@@ -38,6 +72,34 @@ public class ChatRepository implements ChatRepositoryImpl {
             return send_user_id + " -> " + receive_user_id;
         } catch (Exception e){
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "After Chat >> Review or Star Not Found");
+        }
+    }
+
+    @Override
+    public String deleteChatRoom(String userId, String roomId) {
+        try {
+            String sql = "DELETE FROM chat WHERE (chat_sender = ? OR chat_receiver = ?) AND chat_room_id = ?";
+            jdbcTemplate.update(sql, userId, userId, roomId);
+            System.out.println("chat room delete");
+            return userId + " : " + roomId + "삭제";
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Delete Chat Room Not Found");
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getProfileChatRoom(String userId, String roomId) {
+        try {
+            String sql = "SELECT chat_id, chat_room_id, chat_sender, chat_receiver, " +
+                    "(SELECT user.nickname FROM user WHERE user.user_id = chat.chat_sender) AS chat_sender_nickname, " +
+                    "(SELECT user.nickname FROM user WHERE user.user_id = chat.chat_receiver) AS chat_receiver_nickname " +
+                    "FROM chat LEFT JOIN user on user.user_id = chat.chat_receiver " +
+                    "WHERE (chat_sender = ? OR chat_receiver = ?) AND chat_room_id = ?";
+            Object[] params = {userId, userId, roomId};
+            System.out.println("User's Chat Profile SQL select");
+            return jdbcTemplate.queryForList(sql, params);
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User's Chat List Not Found");
         }
     }
 }

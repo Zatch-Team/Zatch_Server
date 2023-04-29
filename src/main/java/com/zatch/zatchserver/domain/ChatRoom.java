@@ -22,7 +22,12 @@ public class ChatRoom {
     }
 
     public void handlerActions(WebSocketSession session, ChatMessage chatMessage, ChatService chatService) {
-        chatService.updateDB(String.valueOf(chatMessage.getType()), chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getMessage());
+        if (String.valueOf(chatMessage.getType()).equals("IMAGE")){
+            chatService.sendImage(String.valueOf(chatMessage.getType()), chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getReceiver(), chatMessage.getImgUrl());
+        }
+        else {
+            chatService.updateDB(String.valueOf(chatMessage.getType()), chatMessage.getRoomId(), chatMessage.getSender(), chatMessage.getReceiver(), chatMessage.getMessage());
+        }
         if (chatMessage.getType().equals(ChatMessage.MessageType.ENTER)) {
             sessions.add(session);
             chatMessage.setMessage(chatMessage.getSender() + "님이 입장했습니다.");

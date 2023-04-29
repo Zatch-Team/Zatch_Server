@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,13 +24,30 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
+    @ApiOperation(value = "채팅방 생성", notes = "채팅방 생성 API")
     public ChatRoom createRoom(@RequestBody String name) {
         return chatService.createRoom(name);
     }
 
+    // 현재 열려있는 채팅방
     @GetMapping
+    @ApiOperation(value = "현재 열려있는 채팅방", notes = "현재 열려있는 채팅방 API")
     public List<ChatRoom> findAllRoom() {
         return chatService.findAllRoom();
+    }
+
+    // 모든 채팅방 리스트
+    @GetMapping("/chat_list/{userId}")
+    @ApiOperation(value = "모든 채팅방 리스트", notes = "모든 채팅방 리스트 API")
+    public List<Map<String, Object>> getAllChatRoom(@PathVariable("userId") String userId) {
+        return chatService.getAllChatRoom(userId);
+    }
+
+    // 채팅방 나가기
+    @GetMapping("/chat_out/{userId}/{roomId}")
+    @ApiOperation(value = "채팅방 나가기", notes = "채팅방 나가기 API")
+    public String outChatRoom(@PathVariable("userId") String userId, @PathVariable("roomId") String roomId) {
+        return chatService.outChatRoom(userId, roomId);
     }
 
     //(거래 후) 별점, 후기 등록하기
@@ -47,4 +65,15 @@ public class ChatController {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error After Chat(Review&Star)"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    // 채팅 참여자 목록 보기
+    @GetMapping("/{userId}/{roomId}/profile")
+    @ApiOperation(value = "채팅 참여자 목록 보기", notes = "채팅 참여자 목록 보기 API")
+    public List<Map<String, Object>> profileChatRoom(@PathVariable("userId") String userId, @PathVariable("roomId") String roomId) {
+        return chatService.profileChatRoom(userId, roomId);
+    }
+
+    // 차단 & 신고하기
+
+
 }

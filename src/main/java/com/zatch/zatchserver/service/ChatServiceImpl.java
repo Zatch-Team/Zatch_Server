@@ -6,6 +6,7 @@ import com.zatch.zatchserver.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -42,7 +43,13 @@ public class ChatServiceImpl implements ChatService {
                 .name(name)
                 .build();
         chatRooms.put(randomId, chatRoom);
+        System.out.println("chatRooms : "+ chatRooms.values());
         return chatRoom;
+    }
+
+    @Override
+    public List<Map<String, Object>> getAllChatRoom(String userId) {
+        return chatRepository.selectAllChatRoom(userId);
     }
 
     public <T> void sendMessage(WebSocketSession session, T message) {
@@ -59,7 +66,22 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public String updateDB(String type, String roomId, String sender, String message) {
-        return chatRepository.updateDB(type, roomId, sender, message);
+    public String updateDB(String type, String roomId, String sender, String receiver, String message) {
+        return chatRepository.updateDB(type, roomId, sender, receiver, message);
+    }
+
+    @Override
+    public String sendImage(String type, String roomId, String sender, String receiver, String imgUrl) {
+        return chatRepository.sendImage(type, roomId, sender, receiver, imgUrl);
+    }
+
+    @Override
+    public String outChatRoom(String userId, String roomId) {
+        return chatRepository.deleteChatRoom(userId, roomId);
+    }
+
+    @Override
+    public List<Map<String, Object>> profileChatRoom(String userId, String roomId) {
+        return chatRepository.getProfileChatRoom(userId, roomId);
     }
 }
