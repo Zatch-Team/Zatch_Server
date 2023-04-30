@@ -197,4 +197,20 @@ public class UserController {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Image Upload"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetUserReqDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
+    @GetMapping("/{userId}/delete")
+    @ApiOperation(value = "회원 탈퇴", notes = "회원 탈퇴 API")
+    public ResponseEntity deleteUser(@PathVariable("userId") Long userId) {
+        try {
+            System.out.println("userId : " + userId);
+            userService.deleteUser(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_DELETE_SUCCESS, userId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error User Delete"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
