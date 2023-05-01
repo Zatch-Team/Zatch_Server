@@ -35,4 +35,7 @@ public class ResponseMessage {
 
     public static final String CENTER_LIST_SUCCESS = "고객센터 리스트 가져오기 성공";
 
+    public static final String SETTING_ALERT_AGREE_SUCCESS = "알림 허용 설정 성공";
+    public static final String SETTING_ALERT_DISAGREE_SUCCESS = "알림 비허용 설정 성공";
+
 }
