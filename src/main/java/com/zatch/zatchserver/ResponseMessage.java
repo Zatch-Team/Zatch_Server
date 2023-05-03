@@ -16,6 +16,13 @@ public class ResponseMessage {
     public static final String USER_NICKNAME_EDIT_SUCCESS ="회원 닉네임 수정 성공";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
+    
+    public static final String GET_NEAR_ZATCH_SUCCESS = "내 주변 재치 조회 성공";
+    public static final String GET_NEAR_ZATCH_FAIL = "내 주변 재치 조회 실패";
+    public static final String ZATCH_SEARCH_SUCCESS = "재치 검색 조회 성공";
+    public static final String ZATCH_SEARCH_FAIL = "재치 검색 조회 실패";
+    public static final String GET_SEARCH_RESULT_SUCCESS = "재치 검색 결과 조회 성공";
+    public static final String GET_SEARCH_RESULT_FAIL = "재치 검색 결과 조회 실패";
 
     public static final String AFTER_CHAT_SUCCESS = "채팅 후기&리뷰 작성 성공";
     public static final String AFTER_CHAT_ERROR = "채팅 후기&리뷰 작성 에러";
@@ -37,5 +44,4 @@ public class ResponseMessage {
 
     public static final String SETTING_ALERT_AGREE_SUCCESS = "알림 허용 설정 성공";
     public static final String SETTING_ALERT_DISAGREE_SUCCESS = "알림 비허용 설정 성공";
-
 }

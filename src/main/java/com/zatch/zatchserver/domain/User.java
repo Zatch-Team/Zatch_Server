@@ -17,6 +17,7 @@ public class User {
     /*---Constructor---*/
     public User(String name, String email, String nickname) {
         this.name = name;
+        this.nickname = nickname;
         this.email = email;
     }
 
