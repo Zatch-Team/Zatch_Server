@@ -5,12 +5,14 @@ import com.zatch.zatchserver.domain.ExchangeSearch;
 import com.zatch.zatchserver.domain.ViewMyZatch;
 import com.zatch.zatchserver.domain.Zatch;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -55,37 +57,47 @@ public class ZatchRepositoryImpl implements ZatchRepository {
 
     @Override
     public List<ViewMyZatch> getZatchName(Long userId) {
-        List<ViewMyZatch> results = jdbcTemplate.query(
-                "SELECT item_name from zatch where user_id = ?",
-                new RowMapper<ViewMyZatch>() {
-                    @Override
-                    public ViewMyZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        ViewMyZatch myZatch = new ViewMyZatch(
-                                rs.getString("item_name"));
-                        return myZatch;
-                    }
-                }, userId);
-        return results.isEmpty() ? null : results;
+        try {
+            List<ViewMyZatch> results = jdbcTemplate.query(
+                    "SELECT item_name from zatch where user_id = ?",
+                    new RowMapper<ViewMyZatch>() {
+                        @Override
+                        public ViewMyZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            ViewMyZatch myZatch = new ViewMyZatch(
+                                    rs.getString("item_name"));
+                            return myZatch;
+                        }
+                    }, userId);
+            return results.isEmpty() ? null : results;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Id Not Found");
+        }
     }
 
     @Override
     public List<ExchangeSearch> viewAll(String itemName1, String itemName2) {
-        List<ExchangeSearch> results = jdbcTemplate.query(
-                "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)",
-                new RowMapper<ExchangeSearch>() {
-                    @Override
-                    public ExchangeSearch mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        ExchangeSearch exchangeSearch = new ExchangeSearch(
-                                rs.getLong("user_id"),
-                                rs.getInt("is_free"),
-                                rs.getString("item_name"),
-                                rs.getInt("allow_any_zatch"),
-                                rs.getInt("like_count")
-                        );
-                        return exchangeSearch;
-                    }
-                }, itemName1, itemName2);
-        return results.isEmpty() ? null : results;
+        try {
+            List<ExchangeSearch> results = jdbcTemplate.query(
+                    "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)",
+                    new RowMapper<ExchangeSearch>() {
+                        @Override
+                        public ExchangeSearch mapRow(ResultSet rs, int rowNum) throws SQLException {
+                            ExchangeSearch exchangeSearch = new ExchangeSearch(
+                                    rs.getLong("user_id"),
+                                    rs.getInt("is_free"),
+                                    rs.getString("item_name"),
+                                    rs.getInt("allow_any_zatch"),
+                                    rs.getInt("like_count")
+                            );
+                            return exchangeSearch;
+                        }
+                    }, itemName1, itemName2);
+            return results.isEmpty() ? null : results;
+
+        } catch (
+                Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Item Name Not Found");
+        }
     }
 }
 

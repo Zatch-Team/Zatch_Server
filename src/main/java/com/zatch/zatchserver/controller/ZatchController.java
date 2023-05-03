@@ -1,13 +1,16 @@
 package com.zatch.zatchserver.controller;
 
 
-import com.zatch.zatchserver.domain.ExchangeSearch;
-import com.zatch.zatchserver.domain.ViewMyZatch;
+import com.zatch.zatchserver.DefaultRes;
+import com.zatch.zatchserver.ResponseMessage;
+import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.Zatch;
 import com.zatch.zatchserver.dto.PostZatchReq;
 import com.zatch.zatchserver.service.ZatchService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +24,7 @@ public class ZatchController {
 
     //메인페이지 조회 리스트
     @GetMapping("")
-    public List<Zatch> getPost(){
+    public List<Zatch> getPost() {
         return postService.getPostList();
 
     }
@@ -48,14 +51,25 @@ public class ZatchController {
     //내 재치 검색어 띄우기
     @GetMapping("/{userId}/search")
     @ApiOperation(value = "교환할 수 있는 재치", notes = "검색 시, 내 재치 조회 API")
-    public List<ViewMyZatch> getMyZatch(@PathVariable("userId") Long userId){
-        return postService.getZatchName(userId);
+    public ResponseEntity getMyZatch(@PathVariable("userId") Long userId) {
+        try {
+            postService.getZatchName(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.ZATCH_SEARCH_SUCCESS, userId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.ZATCH_SEARCH_FAIL, "Get Search Fail"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     //교환할 재치 검색 결과
     @GetMapping("/{userId}/search/{itemName1}&{itemName2}")
     @ApiOperation(value = "교환할 재치", notes = "교환 재치 검색 결과 조회 API")
-    public List<ExchangeSearch> getSearch(@PathVariable("itemName1") String itemName1, @PathVariable("itemName2") String itemName2) {
-        return postService.viewAll(itemName1, itemName2);
+    public ResponseEntity getSearch(@PathVariable("itemName1") String itemName1, @PathVariable("itemName2") String itemName2) {
+        try {
+            postService.viewAll(itemName1, itemName2);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_SEARCH_RESULT_SUCCESS, itemName1 + " " + itemName2), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_SEARCH_RESULT_FAIL, "Get Search Result Fail"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
