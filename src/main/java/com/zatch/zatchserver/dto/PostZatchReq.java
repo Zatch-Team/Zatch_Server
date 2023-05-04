@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 @Getter
@@ -21,4 +20,5 @@ public class PostZatchReq {
     private Date expirationDate;
     private Integer isOpened;
     private Integer anyZatch;
+    private Integer likeCount;
 }

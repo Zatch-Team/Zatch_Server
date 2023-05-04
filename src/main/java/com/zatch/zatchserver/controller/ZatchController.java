@@ -5,6 +5,8 @@ import com.zatch.zatchserver.DefaultRes;
 import com.zatch.zatchserver.ResponseMessage;
 import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.Zatch;
+import com.zatch.zatchserver.dto.GetPopularZatchItemRes;
+import com.zatch.zatchserver.dto.PostZatchLikeRes;
 import com.zatch.zatchserver.dto.PostZatchReq;
 import com.zatch.zatchserver.service.ZatchService;
 import io.swagger.annotations.ApiOperation;
@@ -13,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,11 +46,36 @@ public class ZatchController {
                 postZatchReq.getPurchaseDate(),
                 postZatchReq.getExpirationDate(),
                 postZatchReq.getIsOpened(),
-                postZatchReq.getAnyZatch()
+                postZatchReq.getAnyZatch(),
+                postZatchReq.getLikeCount()
         );
 
         postService.register(newPost);
     }
+
+    @PostMapping("/{zatchId}/likes")
+    @ApiOperation(value = "좋아요", notes = "좋아요")
+    public PostZatchLikeRes postZatchlike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
+        Long userId = (Long) request.getAttribute("userId");
+        Integer likeCount = postService.makeZatchLike(userId, zatchId);
+        return new PostZatchLikeRes(zatchId, likeCount);
+    }
+
+    @DeleteMapping("/{zatchId}/dislikes")
+    @ApiOperation(value = "좋아요 취소", notes = "좋아요 취소")
+    public PostZatchLikeRes postZatchDislike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
+        Long userId = (Long) request.getAttribute("userId");
+        Integer likeCount = postService.makeZatchDisLike(userId, zatchId);
+        return new PostZatchLikeRes(zatchId, likeCount);
+    }
+
+    @GetMapping("/search/popularItem")
+    @ApiOperation(value = "인기있는 재치 물품", notes = "좋아요 순 조회")
+    public GetPopularZatchItemRes getPopularItem(HttpServletRequest request) {
+        List<Map<String, Object>> popularItem= postService.popularZatchItem();
+        return new GetPopularZatchItemRes(popularItem);
+    }
+
 
     //내 재치 검색어 띄우기
     @GetMapping("/{userId}/search")

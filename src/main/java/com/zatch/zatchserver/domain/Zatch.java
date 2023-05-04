@@ -3,7 +3,6 @@ package com.zatch.zatchserver.domain;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 @Getter
@@ -23,7 +22,7 @@ public class Zatch {
 
     /*---Constructor---*/
     @Builder
-    public Zatch(Long userId, Long categoryId, Boolean isFree, String itemName, String content, Integer quantity, Date purchaseDate, Date expirationDate, Integer isOpened, Integer anyZatch) {
+    public Zatch(Long userId, Long categoryId, Boolean isFree, String itemName, String content, Integer quantity, Date purchaseDate, Date expirationDate, Integer isOpened, Integer anyZatch,  Integer likeCount) {
         this.userId = userId;
         this.categoryId = categoryId;
         this.isFree = isFree;
@@ -34,6 +33,7 @@ public class Zatch {
         this.expirationDate = expirationDate;
         this.isOpened = isOpened;
         this.anyZatch = anyZatch;
+        this.likeCount = likeCount;
     }
 }
 
