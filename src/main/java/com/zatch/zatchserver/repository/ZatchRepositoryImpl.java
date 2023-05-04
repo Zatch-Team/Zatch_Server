@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 @Repository
@@ -72,6 +73,43 @@ public class ZatchRepositoryImpl implements ZatchRepository {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Id Not Found");
         }
+    }
+
+    public Integer increaseLike(Long userId, Long zatchId) {
+
+        String increaseLikeQuery = "insert into zatch_like(user_id, zatch_id) values(?,?)";
+
+        jdbcTemplate.update(increaseLikeQuery, new Object[] {userId, zatchId});
+
+        String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
+        return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
+    }
+
+    public Integer decreaseLike(Long userId, Long zatchId) {
+        String decreaseLikeQuery = "delete from zatch_like where user_id = ? and zatch_id = ?";
+
+        jdbcTemplate.update(decreaseLikeQuery, new Object[] {userId, zatchId});
+
+        String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
+        return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
+    }
+
+    //지금 인기있는 재치 item 3개 보여주기
+    public List<Map<String, Object>> showPopularZatch(){
+
+        String showPopularZatchQuery=
+                "SELECT item_name, count(*) as like_count, zatch.created_at FROM zatch_like left join zatch on zatch_like.zatch_id=zatch.zatch_id GROUP BY item_name ORDER BY like_count desc, zatch.created_at desc";
+
+//        List<String> itemName = null;
+//        for(int i=0;i<3;i++){
+//            //System.out.println("@@@@@@@@@ showPopularZatch");
+//            String name=String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name"));
+//            //System.out.println(name);
+//            //itemName.add(String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name")));
+//            itemName.add(name);
+//        }
+        //return itemName;
+        return jdbcTemplate.queryForList(showPopularZatchQuery);
     }
 
     @Override
