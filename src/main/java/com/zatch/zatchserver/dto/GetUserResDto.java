@@ -23,4 +23,7 @@ public class GetUserResDto {
 
     @ApiModelProperty(value = "User 토큰", example = "abcdefg1234567")
     private String token;
+
+    @ApiModelProperty(value = "User 신규회원 여부", example = "true")
+    private Boolean is_new;
 }
