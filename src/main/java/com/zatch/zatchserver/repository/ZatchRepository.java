@@ -12,7 +12,6 @@ public interface ZatchRepository {
 
     List<Zatch> findAllByOrderByCreatedAtDesc();
 
-
     Long register(Zatch zatch);
 
     List<ViewMyZatch> getZatchName(Long userId);
