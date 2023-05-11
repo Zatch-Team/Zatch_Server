@@ -5,13 +5,12 @@ import com.zatch.zatchserver.DefaultRes;
 import com.zatch.zatchserver.ResponseMessage;
 import com.zatch.zatchserver.StatusCode;
 import com.zatch.zatchserver.domain.Zatch;
-import com.zatch.zatchserver.dto.GetPopularZatchItemRes;
-import com.zatch.zatchserver.dto.PostZatchLikeRes;
-import com.zatch.zatchserver.dto.PostZatchReq;
+import com.zatch.zatchserver.dto.*;
 import com.zatch.zatchserver.service.ZatchService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,6 +52,10 @@ public class ZatchController {
         postService.register(newPost);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeRes.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @PostMapping("/{zatchId}/likes")
     @ApiOperation(value = "좋아요", notes = "좋아요")
     public PostZatchLikeRes postZatchlike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
@@ -61,6 +64,10 @@ public class ZatchController {
         return new PostZatchLikeRes(zatchId, likeCount);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeRes.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @DeleteMapping("/{zatchId}/dislikes")
     @ApiOperation(value = "좋아요 취소", notes = "좋아요 취소")
     public PostZatchLikeRes postZatchDislike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
@@ -69,6 +76,10 @@ public class ZatchController {
         return new PostZatchLikeRes(zatchId, likeCount);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetPopularZatchItemRes.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     @GetMapping("/search/popularItem")
     @ApiOperation(value = "인기있는 재치 물품", notes = "좋아요 순 조회")
     public GetPopularZatchItemRes getPopularItem(HttpServletRequest request) {
@@ -77,6 +88,10 @@ public class ZatchController {
     }
 
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetMyZatchResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     //내 재치 검색어 띄우기
     @GetMapping("/{userId}/search")
     @ApiOperation(value = "교환할 수 있는 재치", notes = "검색 시, 내 재치 조회 API")
@@ -89,6 +104,10 @@ public class ZatchController {
         }
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = GetExchangeSearchResDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
     //교환할 재치 검색 결과
     @GetMapping("/{userId}/search/{itemName1}&{itemName2}")
     @ApiOperation(value = "교환할 재치", notes = "교환 재치 검색 결과 조회 API")
