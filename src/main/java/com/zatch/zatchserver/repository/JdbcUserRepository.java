@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class JdbcUserRepository implements UserRepository{
+public class JdbcUserRepository implements UserRepository {
 
     private static Map<Long, User> user = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
@@ -38,29 +38,29 @@ public class JdbcUserRepository implements UserRepository{
     // 회원가입 or 로그인 확인
     @Override
     public String isSignup(String email) {
-        try{
+        try {
             String sql = "SELECT user_id from user WHERE email = ?";
             Object[] params = {email};
             System.out.println("Is Login or Signup SQL select");
             // empty >> signup, not_empty >> login
-            if (jdbcTemplate.queryForList(sql, params).isEmpty()){
+            if (jdbcTemplate.queryForList(sql, params).isEmpty()) {
                 return "signup";
             }
             return "login";
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Login or Signup Error");
         }
     }
 
     @Override
     public String getUserId(String email) {
-        try{
+        try {
             String sql = "SELECT user_id from user WHERE email = ?";
             Object[] params = {email};
             System.out.println("Login SQL select");
             String user_id = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("user_id"));
             return user_id;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Email Not Found");
         }
     }
@@ -69,9 +69,9 @@ public class JdbcUserRepository implements UserRepository{
     @Override
     public Long insert(User user) {
         try {
-            System.out.println("user name >>> : "+ user.getName());
-            System.out.println("user nickname >>> : "+ user.getNickname());
-            System.out.println("user email >>> : "+ user.getEmail());
+            System.out.println("user name >>> : " + user.getName());
+            System.out.println("user nickname >>> : " + user.getNickname());
+            System.out.println("user email >>> : " + user.getEmail());
             String sql = "INSERT INTO user(name, nickname, email) VALUES(?, ?, ?)";
             Object[] params = {user.getName(), user.getNickname(), user.getEmail()};
             jdbcTemplate.update(sql, params);
@@ -87,21 +87,21 @@ public class JdbcUserRepository implements UserRepository{
             jdbcTemplate.update(sql3, params3);
             System.out.println("Signup insert address sql insert");
             return user.getId();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Info Insert Error");
         }
     }
 
     @Override
     public String getNickname(String email) {
-        try{
+        try {
             String sql = "SELECT nickname from user WHERE email = ?";
             Object[] params = {email};
             System.out.println("Get Nickname SQL select");
             String nickname = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("nickname"));
             System.out.println("Nickname : " + nickname);
             return nickname;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Nickname Not Found");
         }
     }
@@ -115,7 +115,7 @@ public class JdbcUserRepository implements UserRepository{
             jdbcTemplate.update(sql, params);
             System.out.println("Modify nickname sql update");
             return userId;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Nickname Modify Error");
         }
     }
@@ -135,36 +135,34 @@ public class JdbcUserRepository implements UserRepository{
             Object[] params = {userId};
             System.out.println("User's profile SQL select");
             return jdbcTemplate.queryForList(sql, params);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Profile Not Found");
         }
     }
 
     // 동네 설정
     @Override
-    public String addressInsert(Long userId, String addr_name, String addr_x, String addr_y){
+    public String addressInsert(Long userId, String addr_name, String addr_x, String addr_y) {
         try {
             System.out.println("사용자 위치 정보 : " + addr_name + " " + addr_x + " " + addr_y);
             String addr_name_1 = jdbcTemplate.queryForObject("SELECT addr_name_1 from address WHERE user_id = ?", new Object[]{userId}, String.class);
             String addr_name_2 = jdbcTemplate.queryForObject("SELECT addr_name_2 from address WHERE user_id = ?", new Object[]{userId}, String.class);
             String addr_name_3 = jdbcTemplate.queryForObject("SELECT addr_name_3 from address WHERE user_id = ?", new Object[]{userId}, String.class);
-            if (addr_name_1 == null){
+            if (addr_name_1 == null) {
                 jdbcTemplate.update("UPDATE address SET addr_name_1 = ?, addr_x_1 = ?, addr_y_1 = ? WHERE user_id = ?", addr_name, addr_x, addr_y, userId);
-                System.out.println("User's address 1 sql update");
-            }
-            else if (addr_name_2 == null){
+                jdbcTemplate.update("UPDATE user SET main_addr_name = ?, main_addr_x = ?, main_addr_y = ? WHERE user_id = ? ", addr_name, addr_x, addr_y, userId);
+                System.out.println("User's address 1 sql update and set main address");
+            } else if (addr_name_2 == null) {
                 jdbcTemplate.update("UPDATE address SET addr_name_2 = ?, addr_x_2 = ?, addr_y_2 = ? WHERE user_id = ?", addr_name, addr_x, addr_y, userId);
                 System.out.println("User's  address 2 sql update");
-            }
-            else if (addr_name_3 == null){
+            } else if (addr_name_3 == null) {
                 jdbcTemplate.update("UPDATE address SET addr_name_3 = ?, addr_x_3 = ?, addr_y_3 = ? WHERE user_id = ?", addr_name, addr_x, addr_y, userId);
                 System.out.println("User's  address 3 sql update");
-            }
-            else {
+            } else {
                 System.out.println("User's address over 3");
             }
             return addr_name;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Address Insert Error");
         }
     }
@@ -176,7 +174,7 @@ public class JdbcUserRepository implements UserRepository{
             jdbcTemplate.update("UPDATE zatch.user SET token = ? WHERE user_id = ?", token, userId);
             System.out.println("Token Insert sql insert");
             return token;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Token UPDATE Error");
         }
     }
@@ -190,7 +188,7 @@ public class JdbcUserRepository implements UserRepository{
             Object[] params = {userId, userId};
             System.out.println("User's My Page SQL select");
             return jdbcTemplate.queryForList(sql, params);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User My Page Not Found");
         }
     }
@@ -202,11 +200,11 @@ public class JdbcUserRepository implements UserRepository{
     // 프로필 이미지 업로드
     @Override
     public String uploadProfile(MultipartFile image, Long userId) {
-        if(!image.isEmpty()) {
+        if (!image.isEmpty()) {
             String storedFileName = null;
             try {
-                storedFileName = s3Uploader.upload(image,"images");
-                System.out.println("filename : "+storedFileName);
+                storedFileName = s3Uploader.upload(image, "images");
+                System.out.println("filename : " + storedFileName);
                 jdbcTemplate.update("UPDATE zatch.user SET profile_img_url = ? WHERE user_id = ?", storedFileName, userId);
                 System.out.println("Profile image upload sql update");
                 return String.valueOf(image);
@@ -220,11 +218,11 @@ public class JdbcUserRepository implements UserRepository{
     // 프로필 이미지 수정
     @Override
     public String patchProfile(MultipartFile image, Long userId) {
-        if(!image.isEmpty()) {
+        if (!image.isEmpty()) {
             String storedFileName = null;
             try {
-                storedFileName = s3Uploader.upload(image,"images");
-                System.out.println("filename : "+storedFileName);
+                storedFileName = s3Uploader.upload(image, "images");
+                System.out.println("filename : " + storedFileName);
                 jdbcTemplate.update("UPDATE zatch.user SET profile_img_url = ? WHERE user_id = ?", storedFileName, userId);
                 System.out.println("Profile image upload sql update");
                 return String.valueOf(image);
@@ -242,7 +240,7 @@ public class JdbcUserRepository implements UserRepository{
             jdbcTemplate.update("DELETE FROM address WHERE user_id = ?", userId);
             System.out.println("User Delete");
             return userId;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Delete Fail");
         }
     }
