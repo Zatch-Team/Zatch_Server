@@ -6,9 +6,12 @@ import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableSwagger2
@@ -21,6 +24,7 @@ public class SwaggerConfig {  // Swagger
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .securitySchemes(Arrays.asList(apiKey())) // swagger에서 jwt 토큰값 넣기위한 설정
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.zatch.zatchserver"))  // Swagger를 적용할 클래스의 package명
                 .paths(PathSelectors.any())  // 해당 package 하위에 있는 모든 url에 적용
@@ -35,4 +39,10 @@ public class SwaggerConfig {  // Swagger
                 .description(API_DESCRIPTION)
                 .build();
     }
+
+    // authorization jwt
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "jwt", "header");
+    }
+
 }
