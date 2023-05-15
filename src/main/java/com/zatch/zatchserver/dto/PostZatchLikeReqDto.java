@@ -2,10 +2,11 @@ package com.zatch.zatchserver.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-public class PostZatchLikeRes {
-    private Long zatchId;
-    private Integer likeCount;
+@NoArgsConstructor
+public class PostZatchLikeReqDto {
+    private Long userId;
 }

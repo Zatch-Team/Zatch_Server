@@ -53,27 +53,25 @@ public class ZatchController {
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeRes.class,
+            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeResDto.class,
                     examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
     @PostMapping("/{zatchId}/likes")
     @ApiOperation(value = "좋아요", notes = "좋아요")
-    public PostZatchLikeRes postZatchlike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
-        Long userId = (Long) request.getAttribute("userId");
-        Integer likeCount = postService.makeZatchLike(userId, zatchId);
-        return new PostZatchLikeRes(zatchId, likeCount);
+    public PostZatchLikeResDto postZatchlike(@PathVariable("zatchId") Long zatchId,  @RequestBody PostZatchLikeReqDto postZatchLikeReqDto) {
+        Integer likeCount = postService.makeZatchLike(postZatchLikeReqDto.getUserId(), zatchId);
+        return new PostZatchLikeResDto(zatchId, likeCount, Boolean.TRUE); //좋아요 시, True 값
     }
 
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeRes.class,
+            @ApiResponse(code = 200, message = "Success", response = PostZatchLikeResDto.class,
                     examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
     @DeleteMapping("/{zatchId}/dislikes")
     @ApiOperation(value = "좋아요 취소", notes = "좋아요 취소")
-    public PostZatchLikeRes postZatchDislike(HttpServletRequest request, @PathVariable("zatchId") Long zatchId) {
-        Long userId = (Long) request.getAttribute("userId");
-        Integer likeCount = postService.makeZatchDisLike(userId, zatchId);
-        return new PostZatchLikeRes(zatchId, likeCount);
+    public PostZatchLikeResDto postZatchDislike(@PathVariable("zatchId") Long zatchId, @RequestBody PostZatchLikeReqDto postZatchLikeReqDto) {
+        Integer likeCount = postService.makeZatchDisLike(postZatchLikeReqDto.getUserId(), zatchId);
+        return new PostZatchLikeResDto(zatchId, likeCount, Boolean.FALSE); //취소 시, False 값
     }
 
     @ApiResponses(value = {
