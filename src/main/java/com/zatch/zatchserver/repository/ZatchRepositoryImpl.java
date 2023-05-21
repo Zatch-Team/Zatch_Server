@@ -60,12 +60,12 @@ public class ZatchRepositoryImpl implements ZatchRepository {
     public List<ViewMyZatch> getZatchName(Long userId) {
         try {
             List<ViewMyZatch> results = jdbcTemplate.query(
-                    "SELECT item_name from zatch where user_id = ?",
+                    "SELECT md_name from zatch where user_id = ?",
                     new RowMapper<ViewMyZatch>() {
                         @Override
                         public ViewMyZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
                             ViewMyZatch myZatch = new ViewMyZatch(
-                                    rs.getString("item_name"));
+                                    rs.getString("md_name"));
                             return myZatch;
                         }
                     }, userId);
@@ -79,7 +79,8 @@ public class ZatchRepositoryImpl implements ZatchRepository {
 
         String increaseLikeQuery = "insert into zatch_like(user_id, zatch_id) values(?,?)";
 
-        jdbcTemplate.update(increaseLikeQuery, new Object[] {userId, zatchId});
+        jdbcTemplate.update(increaseLikeQuery, new Object[]{userId, zatchId});
+        jdbcTemplate.update("update zatch set like_count = like_count + 1 where zatch_id = ?", zatchId);
 
         String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
         return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
@@ -88,27 +89,18 @@ public class ZatchRepositoryImpl implements ZatchRepository {
     public Integer decreaseLike(Long userId, Long zatchId) {
         String decreaseLikeQuery = "delete from zatch_like where user_id = ? and zatch_id = ?";
 
-        jdbcTemplate.update(decreaseLikeQuery, new Object[] {userId, zatchId});
+        jdbcTemplate.update(decreaseLikeQuery, new Object[]{userId, zatchId});
+        jdbcTemplate.update("update zatch set like_count = like_count - 1 where zatch_id = ?", zatchId);
 
         String getZatchLikeCountQuery = "select count(zatch_like_id) from zatch_like where zatch_id = ?";
         return jdbcTemplate.queryForObject(getZatchLikeCountQuery, Integer.class, zatchId);
     }
 
-    //지금 인기있는 재치 item 3개 보여주기
-    public List<Map<String, Object>> showPopularZatch(){
+    //인기있는 재치 item 3개 보여주기
+    public List<Map<String, Object>> showPopularZatch() {
 
-        String showPopularZatchQuery=
-                "SELECT item_name, count(*) as like_count, zatch.created_at FROM zatch_like left join zatch on zatch_like.zatch_id=zatch.zatch_id GROUP BY item_name ORDER BY like_count desc, zatch.created_at desc";
-
-//        List<String> itemName = null;
-//        for(int i=0;i<3;i++){
-//            //System.out.println("@@@@@@@@@ showPopularZatch");
-//            String name=String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name"));
-//            //System.out.println(name);
-//            //itemName.add(String.valueOf(jdbcTemplate.queryForList(showPopularZatchQuery).get(i).get("item_name")));
-//            itemName.add(name);
-//        }
-        //return itemName;
+        String showPopularZatchQuery =
+                "SELECT md_name, count(*) as like_count, zatch.created_at FROM zatch_like left join zatch on zatch_like.zatch_id=zatch.zatch_id GROUP BY md_name ORDER BY like_count desc limit 3";
         return jdbcTemplate.queryForList(showPopularZatchQuery);
     }
 
@@ -116,14 +108,14 @@ public class ZatchRepositoryImpl implements ZatchRepository {
     public List<ExchangeSearch> viewAll(String itemName1, String itemName2) {
         try {
             List<ExchangeSearch> results = jdbcTemplate.query(
-                    "SELECT * from zatch where (item_name LIKE ? OR item_name LIKE ?)",
+                    "SELECT * from zatch where (md_name LIKE ? OR md_name LIKE ?)",
                     new RowMapper<ExchangeSearch>() {
                         @Override
                         public ExchangeSearch mapRow(ResultSet rs, int rowNum) throws SQLException {
                             ExchangeSearch exchangeSearch = new ExchangeSearch(
                                     rs.getLong("user_id"),
                                     rs.getInt("is_free"),
-                                    rs.getString("item_name"),
+                                    rs.getString("md_name"),
                                     rs.getInt("allow_any_zatch"),
                                     rs.getInt("like_count")
                             );
@@ -134,7 +126,7 @@ public class ZatchRepositoryImpl implements ZatchRepository {
 
         } catch (
                 Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Item Name Not Found");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "MD Name Not Found");
         }
     }
 }
