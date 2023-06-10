@@ -1,16 +1,20 @@
 package com.zatch.zatchserver.repository;
 
+import com.zatch.zatchserver.domain.Address;
 import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.service.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +144,7 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
-    // 동네 설정
+    // 동네 설정 -> 초기 설정은 addr_name_1 이 대표 동네
     @Override
     public String addressInsert(Long userId, String addr_name, String addr_x, String addr_y) {
         try {
@@ -164,6 +168,72 @@ public class JdbcUserRepository implements UserRepository {
             return addr_name;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Address Insert Error");
+        }
+    }
+
+    //대표 동네 변경 -> 대표 동네 변경할 때에는 main_addr_name에 덮어쓰기
+    @Override
+    public String editAddress(Long userId, int addressNum) {
+        try {
+            List<Address> results = null;
+            if (addressNum == 1) {
+                String sql = "SELECT addr_name_1, addr_x_1, addr_y_1 FROM address WHERE user_id = ?";
+                Object[] params = new Object[]{userId};
+
+                results = jdbcTemplate.query(sql, params, new RowMapper<Address>() {
+                    @Override
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // Map the result set to your object
+                        Address obj = new Address();
+                        obj.setAddr_name(rs.getString("addr_name_1"));
+                        obj.setAddr_x(rs.getString("addr_x_1"));
+                        obj.setAddr_y(rs.getString("addr_y_1"));
+
+                        return obj;
+                    }
+                });
+                System.out.println(results.get(0));
+            }
+            else if(addressNum == 2){
+                String sql = "SELECT addr_name_2, addr_x_2, addr_y_2 FROM address WHERE user_id = ?";
+                Object[] params = new Object[]{userId};
+
+                results = jdbcTemplate.query(sql, params, new RowMapper<Address>() {
+                    @Override
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // Map the result set to your object
+                        Address obj = new Address();
+                        obj.setAddr_name(rs.getString("addr_name_2"));
+                        obj.setAddr_x(rs.getString("addr_x_2"));
+                        obj.setAddr_y(rs.getString("addr_y_2"));
+
+                        return obj;
+                    }
+                });
+                System.out.println(results.get(0));
+
+            }
+            else if(addressNum == 3){
+                String sql = "SELECT addr_name_3, addr_x_3, addr_y_3 FROM address WHERE user_id = ?";
+                Object[] params = new Object[]{userId};
+
+                results = jdbcTemplate.query(sql, params, new RowMapper<Address>() {
+                    @Override
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        // Map the result set to your object
+                        Address obj = new Address();
+                        obj.setAddr_name(rs.getString("addr_name_3"));
+                        obj.setAddr_x(rs.getString("addr_x_3"));
+                        obj.setAddr_y(rs.getString("addr_y_3"));
+
+                        return obj;
+                    }
+                });
+            }
+            jdbcTemplate.update("UPDATE user SET main_addr_name = ?, main_addr_x = ?, main_addr_y = ? WHERE user_id = ? ", results.get(0).getAddr_name(), results.get(0).getAddr_x(), results.get(0).getAddr_y(), userId);
+            return results.get(0).getAddr_name();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User Address Edit Error");
         }
     }
 

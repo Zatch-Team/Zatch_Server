@@ -24,6 +24,8 @@ public interface UserService {
 
     String address(Long userId, String addr_name, String addr_x, String addr_y);
 
+    String modAddress(Long userId, int addressNum);
+
     String token(Long userId, String token);
 
     String mypage(Long userId);
