@@ -25,6 +25,8 @@ public interface UserRepository {
 
     String addressInsert(Long userId, String addr_name, String addr_x, String addr_y);
 
+    String editAddress(Long userId, int addressNum);
+
     String insertToken(Long userId, String token);
 
     List<Map<String, Object>> getMypage(Long userId);

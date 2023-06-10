@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -64,6 +62,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public String address(Long userId, String addr_name, String addr_x, String addr_y) {
         return userRepository.addressInsert(userId, addr_name, addr_x, addr_y);
+    }
+
+    @Override
+    public String modAddress(Long userId, int addressNum){
+        return userRepository.editAddress(userId, addressNum);
     }
 
     @Override

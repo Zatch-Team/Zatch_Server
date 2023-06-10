@@ -40,10 +40,10 @@ public class UserController {
         String isSignup = userService.loginOrSignup(postUserReqDto.getEmail());
 
         // 회원가입
-        if (isSignup.equals("signup")){
+        if (isSignup.equals("signup")) {
             List<String> adjectives = Arrays.asList("귀여운", "당황한", "어리둥절", "깜찍한", "동글동글", "초롱초롱", "배고픈", "의아한", "놀라운", "어여쁜", "차분한", "한가한", "화려한", "깨끗한",
                     "정직한", "활발한", "긍정적인", "낙천적인", "다정한", "단호한", "겸손한", "매력적인", "발랄한", "민첩한", "상냥한", "솔직한", "신중한", "용감한", "수줍은", "소중한");
-            List<String>  animals = Arrays.asList("강아지", "거북이", "고래", "고양이", "공작", "기린", "까치", "낙타", "너구리", "늑대", "다람쥐", "부엉이", "사슴", "사자", "새우", "수달", "순록",
+            List<String> animals = Arrays.asList("강아지", "거북이", "고래", "고양이", "공작", "기린", "까치", "낙타", "너구리", "늑대", "다람쥐", "부엉이", "사슴", "사자", "새우", "수달", "순록",
                     "악어", "여우", "오리", "올빼미", "청설모", "치타", "코끼리", "토끼", "팬더", "펭귄", "표범", "햄스터", "호랑이");
             Collections.shuffle(adjectives);
             Collections.shuffle(animals);
@@ -89,13 +89,13 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    @ApiOperation(value="로그아웃", notes = "로그아웃 API")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
+    @ApiOperation(value = "로그아웃", notes = "로그아웃 API")
+    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             HttpSession session = request.getSession();
             session.invalidate();
             return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_NICKNAME_EDIT_SUCCESS, "Success Logout"), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Logout"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,13 +106,13 @@ public class UserController {
     })
     @PatchMapping("/{userId}/nickname")
     @ApiOperation(value = "회원 닉네임 수정", notes = "회원 닉네임 수정 API")
-    public ResponseEntity patchNickname(@PathVariable("userId") Long userId , @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
+    public ResponseEntity patchNickname(@PathVariable("userId") Long userId, @RequestBody PatchUserNicknameReqDto pathUserNicknameReqDto) {
         try {
             String newNickname = pathUserNicknameReqDto.getNewNickname();
             Long idOfModifiedUser = userId;
             userService.modifyNickname(idOfModifiedUser, newNickname);
             return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_NICKNAME_EDIT_SUCCESS, new PatchUserNicknameResDto(newNickname)), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error Modify Nickname"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -151,6 +151,21 @@ public class UserController {
     }
 
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success", response = PostUserAddressEditReqDto.class,
+                    examples = @Example(@ExampleProperty(value = "{'property1': 'value1'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
+    })
+    @PostMapping("/{userId}/edit_address")
+    @ApiOperation(value = "회원 동네 변경", notes = "회원 동네 변경 API")
+    public ResponseEntity editAddress(@PathVariable("userId") Long userId, @RequestBody PostUserAddressEditReqDto postUserAddressEditReqDto) {
+        try {
+            int addressNum = postUserAddressEditReqDto.getAddress_num();
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.USER_TOWN_EDIT_SUCCESS, new PostUserAddressEditReqDto(addressNum)), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, "Error User Town Edit"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GetMypageResDto.class,
                     examples = @Example(@ExampleProperty(value = "{'property1': 'value1', 'property2': 'value2'}", mediaType = MediaType.APPLICATION_JSON_VALUE)))
     })
@@ -172,9 +187,9 @@ public class UserController {
     })
     @PostMapping("/{userId}/upload_profile")
     @ApiOperation(value = "회원 프로필 이미지 업로드", notes = "회원 프로필 이미지 업로드 API", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity uploadProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
+    public ResponseEntity uploadProfile(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile image) {
         try {
-            System.out.println("param_image : "+image);
+            System.out.println("param_image : " + image);
             userService.uploadProfile(userId, image);
             return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.PROFILE_IMAGE_UPLOAD_SUCCESS, image), HttpStatus.OK);
         } catch (Exception e) {
@@ -188,9 +203,9 @@ public class UserController {
     })
     @PatchMapping("/{userId}/patch_profile")
     @ApiOperation(value = "회원 프로필 이미지 수정", notes = "회원 프로필 이미지 수정 API")
-    public ResponseEntity patchProfile(@PathVariable("userId") Long userId, @RequestParam(value="image") MultipartFile image) {
+    public ResponseEntity patchProfile(@PathVariable("userId") Long userId, @RequestParam(value = "image") MultipartFile image) {
         try {
-            System.out.println("param_image : "+image);
+            System.out.println("param_image : " + image);
             userService.patchProfile(userId, image);
             return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.PROFILE_IMAGE_UPLOAD_SUCCESS, image), HttpStatus.OK);
         } catch (Exception e) {
