@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class JdbcUserRepository implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
     private static Map<Long, User> user = new HashMap<>();
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcUserRepository(DataSource dataSource) {
+    public UserRepositoryImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
