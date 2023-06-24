@@ -19,12 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
     private final MainService mainService;
 
-//    //메인페이지에 선택한 동네 띄우기
-//    @GetMapping("/myTown")
-//    public List<??> getMyTown(Long userId){
-//        return mainService.getNearZatch(userId);
-//
-//    }
+    //메인페이지에 선택한 동네 띄우기
+    @GetMapping("/{userId}/myTown")
+    public ResponseEntity getMyTown(@PathVariable("userId") Long userId){
+        try {
+            String main_town = mainService.getMainTown(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_MY_TOWN_SUCCESS, main_town), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.GET_MY_TOWN_FAIL, "Error Get Town"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     //메인페이지 내 주변 재치 조회 리스트
     @GetMapping("/{userId}/viewNearZatch")

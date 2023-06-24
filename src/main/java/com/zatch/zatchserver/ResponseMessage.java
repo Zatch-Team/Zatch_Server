@@ -18,7 +18,9 @@ public class ResponseMessage {
     public static final String USER_NICKNAME_EDIT_SUCCESS ="회원 닉네임 수정 성공";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
-    
+
+    public static final String GET_MY_TOWN_SUCCESS = "내 동네 조회 성공";
+    public static final String GET_MY_TOWN_FAIL = "내 동네 조회 실패";
     public static final String GET_NEAR_ZATCH_SUCCESS = "내 주변 재치 조회 성공";
     public static final String GET_NEAR_ZATCH_FAIL = "내 주변 재치 조회 실패";
     public static final String GET_POPULAR_ZATCH_SUCCESS = "인기있는 재치 조회 성공";
