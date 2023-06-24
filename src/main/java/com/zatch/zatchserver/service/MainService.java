@@ -17,4 +17,5 @@ public class MainService {
 
     public List<ViewPopularZatch> getPopularZatch(Long userId){return mainRepository.getPopularZatch(userId);}
 
+    public String getMainTown(Long userId){return mainRepository.getMainTown(userId);}
 }

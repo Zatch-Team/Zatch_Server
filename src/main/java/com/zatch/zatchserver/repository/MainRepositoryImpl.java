@@ -20,6 +20,14 @@ public class MainRepositoryImpl implements MainRepository {
     }
 
     @Override
+    public String getMainTown(Long userId){
+        String sql = "SELECT main_addr_name FROM user WHERE user_id = ?;";
+        Object[] params = {userId};
+        String main_addr_name = String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("main_addr_name"));
+        return main_addr_name;
+    }
+
+    @Override
     public List<ViewNearZatch> getNearZatch(Long userId) {
         List<ViewNearZatch> results = jdbcTemplate.query(
                 "SELECT user.user_id, zatch.zatch_id, zatch.category_id, zatch.is_free, zatch.item_name, zatch.content, zatch.updated_at, quantity, purchase_date, expiration_date, is_opened, allow_any_zatch, zatch.like_count, user.town1, user.town2, user.town3, zatch_img.zatch_img_url FROM zatch LEFT OUTER JOIN zatch_img ON zatch.zatch_id = zatch_img.zatch_id JOIN user ON zatch.user_id = user.user_id WHERE ((town1 IN (SELECT town1 or town2 or town3 FROM user)) or (town2 IN (SELECT town1 or town2 or town3 FROM user)) or (town3 IN (SELECT town1 or town2 or town3 FROM user))) and user.user_id != ?;",
