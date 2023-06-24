@@ -37,4 +37,19 @@ public class MainController {
             return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.GET_NEAR_ZATCH_FAIL, "Error Get Zatch"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //인기있는 재치 띄우기
+    @GetMapping("{userId}/viewPopularZatch")
+    @ApiOperation(value = "메인페이지 내 인기있는 재치 조회", notes = "인기 있는 재치 조회 API")
+    public ResponseEntity getPopularZatch(@PathVariable("userId") Long userId) {
+        try {
+            mainService.getPopularZatch(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_POPULAR_ZATCH_SUCCESS, userId), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.GET_POPULAR_ZATCH_FAIL, "Error Get Zatch"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

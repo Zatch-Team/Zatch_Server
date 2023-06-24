@@ -21,6 +21,8 @@ public class ResponseMessage {
     
     public static final String GET_NEAR_ZATCH_SUCCESS = "내 주변 재치 조회 성공";
     public static final String GET_NEAR_ZATCH_FAIL = "내 주변 재치 조회 실패";
+    public static final String GET_POPULAR_ZATCH_SUCCESS = "인기있는 재치 조회 성공";
+    public static final String GET_POPULAR_ZATCH_FAIL = "인기있는 재치 조회 실패";
     public static final String ZATCH_SEARCH_SUCCESS = "재치 검색 조회 성공";
     public static final String ZATCH_SEARCH_FAIL = "재치 검색 조회 실패";
     public static final String GET_SEARCH_RESULT_SUCCESS = "재치 검색 결과 조회 성공";
