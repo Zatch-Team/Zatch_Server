@@ -8,37 +8,30 @@ import java.util.Date;
 public class ViewNearZatch {
     private Long categoryId;
     private Boolean isFree;
-    private String itemName;
+    private String mdName;
     private String content;
-    private String zatchImgUrl;
     private Integer quantity;
-    private Date purchaseDate;
-    private Date expirationDate;
-    private Date updated_at;
+    private Date dateBuy;
+    private Date dateExpire;
+    private Date updatedAt;
     private Integer isOpened;
     private Integer anyZatch;
     private Integer likeCount;
-    private String town1;
-    private String town2;
-    private String town3;
+    private String addrName;
 
-    public ViewNearZatch(Long categoryId, Boolean isFree, String itemName, String content, String zatchImgUrl
-    , Integer quantity, Date purchaseDate, Date expirationDate, Date updated_at, Integer isOpened, Integer anyZatch,
-                         Integer likeCount, String town1, String town2, String town3){
+    public ViewNearZatch(Long categoryId, Boolean isFree, String mdName, String content, Integer quantity, Date dateBuy, Date dateExpire, Date updatedAt, Integer isOpened, Integer anyZatch,
+                         Integer likeCount, String addrName) {
         this.categoryId = categoryId;
         this.isFree = isFree;
-        this.itemName = itemName;
+        this.mdName = mdName;
         this.content = content;
-        this.zatchImgUrl = zatchImgUrl;
         this.quantity = quantity;
-        this.purchaseDate = purchaseDate;
-        this.expirationDate = expirationDate;
-        this.updated_at = updated_at;
+        this.dateBuy = dateBuy;
+        this.dateExpire = dateExpire;
+        this.updatedAt = updatedAt;
         this.isOpened = isOpened;
         this.anyZatch = anyZatch;
         this.likeCount = likeCount;
-        this.town1 = town1;
-        this.town2 = town2;
-        this.town3 = town3;
+        this.addrName = addrName;
     }
 }

@@ -3,6 +3,7 @@ package com.zatch.zatchserver.controller;
 import com.zatch.zatchserver.DefaultRes;
 import com.zatch.zatchserver.ResponseMessage;
 import com.zatch.zatchserver.StatusCode;
+import com.zatch.zatchserver.domain.ViewNearZatch;
 import com.zatch.zatchserver.service.MainService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,10 +38,11 @@ public class MainController {
     @ApiOperation(value = "메인페이지 내 주변 재치 조회", notes = "내 주변 재치 조회 API")
     public ResponseEntity getNearZatch(@PathVariable("userId") Long userId) {
         try {
-            mainService.getNearZatch(userId);
-            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_NEAR_ZATCH_SUCCESS, userId), HttpStatus.OK);
+            List<ViewNearZatch> nearZatches = mainService.getNearZatch(userId);
+            return new ResponseEntity(DefaultRes.res(StatusCode.OK, ResponseMessage.GET_NEAR_ZATCH_SUCCESS, nearZatches), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.GET_NEAR_ZATCH_FAIL, "Error Get Zatch"), HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println(e);
+            return new ResponseEntity(DefaultRes.res(StatusCode.INTERNAL_SERVER_ERROR, ResponseMessage.GET_NEAR_ZATCH_FAIL, "Error Get Near Zatch"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
