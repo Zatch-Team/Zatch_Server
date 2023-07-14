@@ -1,5 +1,6 @@
 package com.zatch.zatchserver.repository;
 
+import com.zatch.zatchserver.domain.Address;
 import com.zatch.zatchserver.domain.ViewNearZatch;
 import com.zatch.zatchserver.domain.ViewPopularZatch;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,31 +30,47 @@ public class MainRepositoryImpl implements MainRepository {
 
     @Override
     public List<ViewNearZatch> getNearZatch(Long userId) {
+        String sql = "SELECT main_addr_x, main_addr_y FROM user WHERE user_id = ?;";
+        Object[] params = {userId};
+        Double main_addr_x = Double.valueOf(String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("main_addr_x")));
+        Double main_addr_y = Double.valueOf(String.valueOf(jdbcTemplate.queryForList(sql, params).get(0).get("main_addr_y")));
+
+        List<Address> addresses = jdbcTemplate.query(
+                "SELECT main_addr_name, main_addr_x, main_addr_y FROM user WHERE user_id in (SELECT user_id FROM zatch);",
+                new RowMapper<Address>() {
+                    @Override
+                    public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        Address address = new Address(
+                                rs.getString("main_addr_name"),
+                                String.valueOf(rs.getDouble("main_addr_x")),
+                                String.valueOf(rs.getDouble("main_addr_y"))
+                        );
+                        return address;
+                    }
+                });
+
         List<ViewNearZatch> results = jdbcTemplate.query(
-                "SELECT user.user_id, zatch.zatch_id, zatch.category_id, zatch.is_free, zatch.item_name, zatch.content, zatch.updated_at, quantity, purchase_date, expiration_date, is_opened, allow_any_zatch, zatch.like_count, user.town1, user.town2, user.town3, zatch_img.zatch_img_url FROM zatch LEFT OUTER JOIN zatch_img ON zatch.zatch_id = zatch_img.zatch_id JOIN user ON zatch.user_id = user.user_id WHERE ((town1 IN (SELECT town1 or town2 or town3 FROM user)) or (town2 IN (SELECT town1 or town2 or town3 FROM user)) or (town3 IN (SELECT town1 or town2 or town3 FROM user))) and user.user_id != ?;",
+                "SELECT zatch.user_id, zatch_id, category_id, is_free, md_name, content, zatch.updated_at, quantity, date_buy, date_expire, is_opened, any_zatch, like_count, main_addr_name FROM zatch JOIN user on zatch.user_id = user.user_id;",
                 new RowMapper<ViewNearZatch>() {
                     @Override
                     public ViewNearZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
                         ViewNearZatch nearZatch = new ViewNearZatch(
                                 rs.getLong("category_id"),
                                 rs.getBoolean("is_free"),
-                                rs.getString("item_name"),
+                                rs.getString("md_name"),
                                 rs.getString("content"),
-                                rs.getString("zatch_img_url"),
                                 rs.getInt("quantity"),
-                                rs.getDate("purchase_date"),
-                                rs.getDate("expiration_date"),
+                                rs.getDate("date_buy"),
+                                rs.getDate("date_expire"),
                                 rs.getDate("updated_at"),
                                 rs.getInt("is_opened"),
-                                rs.getInt("allow_any_zatch"),
+                                rs.getInt("any_zatch"),
                                 rs.getInt("like_count"),
-                                rs.getString("town1"),
-                                rs.getString("town2"),
-                                rs.getString("town3")
+                                rs.getString("main_addr_name")
                         );
                         return nearZatch;
                     }
-                }, userId);
+                });
         return results.isEmpty() ? null : results;
     }
 
@@ -65,6 +82,7 @@ public class MainRepositoryImpl implements MainRepository {
                     @Override
                     public ViewPopularZatch mapRow(ResultSet rs, int rowNum) throws SQLException {
                         ViewPopularZatch popularZatch = new ViewPopularZatch(
+                                rs.getLong("zatch_id"),
                                 rs.getLong("category_id"),
                                 rs.getBoolean("is_free"),
                                 rs.getString("md_name"),

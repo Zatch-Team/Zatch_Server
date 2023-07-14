@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Getter
 public class ViewPopularZatch {
+    private Long zatchId;
     private Long categoryId;
     private Boolean isFree;
     private String mdName;
@@ -18,9 +19,10 @@ public class ViewPopularZatch {
     private Integer anyZatch;
     private Integer likeCount;
 
-    public ViewPopularZatch(Long categoryId, Boolean isFree, String mdName, String content
+    public ViewPopularZatch(Long zatchId, Long categoryId, Boolean isFree, String mdName, String content
             , Integer quantity, Date dateBuy, Date dateExpire, Date updated_at, Integer isOpened, Integer anyZatch,
                             Integer likeCount) {
+        this.zatchId = zatchId;
         this.categoryId = categoryId;
         this.isFree = isFree;
         this.mdName = mdName;
