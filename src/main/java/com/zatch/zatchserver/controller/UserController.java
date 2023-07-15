@@ -7,6 +7,7 @@ import com.zatch.zatchserver.domain.User;
 import com.zatch.zatchserver.dto.*;
 import com.zatch.zatchserver.service.AuthService;
 import com.zatch.zatchserver.service.UserService;
+import com.zatch.zatchserver.util.JwtProvider;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +29,7 @@ import java.util.*;
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
+    private final JwtProvider jwtProvider;
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success", response = GetUserResDto.class,
@@ -88,6 +90,15 @@ public class UserController {
         return ResponseEntity.ok().body(getUserResDto);
     }
 
+    // 토큰 인증 컨트롤러
+    @GetMapping(value = "/checkToken")
+    public ResponseEntity checkToken(@RequestHeader(value = "Authorization") String token) throws Exception {
+        Boolean claims = jwtProvider.validate(token);
+        if (claims) {
+            return ResponseEntity.ok().body("success");
+        }
+        return ResponseEntity.ok().body("fail");
+    }
     @GetMapping("/logout")
     @ApiOperation(value="로그아웃", notes = "로그아웃 API")
     public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) throws Exception{
